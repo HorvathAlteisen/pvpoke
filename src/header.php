@@ -149,6 +149,7 @@ if(! isset($OG_IMAGE)){
 
 <script src="<?php echo $WEB_ROOT; ?>js/libs/jquery-3.3.1.min.js"></script>
 <script src="<?php echo $WEB_ROOT; ?>js/interface/RSSReader.js?v=<?php echo $SITE_VERSION; ?>"></script>
+<script src="<?php echo $WEB_ROOT; ?>js/PageStore.js?v=<?php echo $SITE_VERSION; ?>"></script>
 
 <?php require_once('modules/analytics.php'); ?>
 
@@ -203,6 +204,13 @@ if(! isset($OG_IMAGE)){
 		echo 'var get = false;';
 	}
 	?>
+
+	var store;
+
+	// set standard language
+	window.document.addEventListener('DOMContentLoaded', function() {
+		store = pageStore();
+	})
 </script>
 
 	<?php require_once 'modules/ads/base-code.php'; ?>
@@ -238,6 +246,17 @@ if(! isset($OG_IMAGE)){
 				<div class="meat"></div>
 			</div>
 			<div class="menu">
+				<div class="parent-menu">
+					<a class="icon-battle <?php if(strpos($_SERVER['REQUEST_URI'], '/battle/')): echo "selected"; endif; ?>" href="<?php echo $WEB_ROOT; ?>battle/">
+						Language<span></span>
+					</a>
+					<div class="submenu">
+						<div class="submenu-wrap">
+							<a class="nav-great" href="#" onclick="store.set('language', 'en')">English</a>
+							<a class="nav-ultra" href="#" onclick="store.set('language', 'de')">Deutsch</a>
+						</div>
+					</div>
+				</div>
 				<div class="parent-menu">
 					<a class="icon-battle <?php if(strpos($_SERVER['REQUEST_URI'], '/battle/')): echo "selected"; endif; ?>" href="<?php echo $WEB_ROOT; ?>battle/">
 						Battle<span></span>
