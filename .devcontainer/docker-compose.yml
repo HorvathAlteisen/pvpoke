@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  web:
+    container_name: pvpoke
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    ports:
+      - 80:80
+    volumes:
+      - ../:/var/www/html/pvpoke
