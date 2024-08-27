@@ -13,7 +13,6 @@
   "dependencies": {
     "axios": "^x.x.x",
     "cheerio": "^x.x.x",
-    "express": "^x.x.x",
     "nodemon": "^x.x.x"
   }
 }
