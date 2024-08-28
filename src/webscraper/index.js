@@ -12,24 +12,16 @@ async function scrapeData() {
         const $ = cheerio.load(data);
         const scrapedData = [];
 
-        $('table.pwtable1 tbody').each((i, elem) => {
-            elem.children
-                .filter((_, i) => i !== 0)
-                .filter((child) => $(child).text().trim() !== '')
-                .forEach((child) => {
-                    const filtered = $(child).text().split('\n').filter(
-                        (_, i) => (i !== 0 && i !== 2 && i !== 9)
-                    );
+        $('table.pwtable1 tbody tr').each((i, elem) => {
 
-                    scrapedData.push({
-                        de: filtered[1],
-                        en: filtered[2],
-                        fr: filtered[3],
-                        jp: filtered[4],
-                        kr: filtered[5],
-                        zh: filtered[6]
-                    });
-                });
+            i !== 0 ? scrapedData.push({
+                de: $(elem).find('td').eq(2).text().trim(),
+                en: $(elem).find('td').eq(3).text().trim(),
+                fr: $(elem).find('td').eq(4).text().trim(),
+                jp: $(elem).find('td').eq(5).text().trim(),
+                kr: $(elem).find('td').eq(6).text().trim(),
+                zh: $(elem).find('td').eq(7).text().trim()
+            }) : null
         });
 
         const result = JSON.stringify(scrapedData);
@@ -46,5 +38,6 @@ async function scrapeData() {
         console.error(error);
     }
 }
+
 
 scrapeData();
