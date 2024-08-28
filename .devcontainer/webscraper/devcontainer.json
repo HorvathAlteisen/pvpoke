@@ -1,0 +1,10 @@
+{
+	"name": "webscraper",
+	"image": "mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm",
+	"workspaceFolder": "/workspaces/webscraper",
+	"onCreateCommand": "mkdir -p /workspaces/webscraper",
+	"remoteUser": "root",
+	"mounts": [
+		"source=${localWorkspaceFolder}/src/webscraper,target=/workspaces/webscraper,type=bind"
+	]
+}
