@@ -44,7 +44,9 @@ function pageStore() {
 
     Object.entries(defaults).forEach(([key, value]) => {
         const item = localStorage.getItem(key);
-        item === null || item === undefined ? localStorage.setItem(key, value) : setValue(key, value)
+        if (item === null || item === undefined) {
+            localStorage.setItem(key, value);
+        }
     });
 
     return {
