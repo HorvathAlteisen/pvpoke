@@ -210,6 +210,17 @@ if(! isset($OG_IMAGE)){
 	// set standard language
 	window.document.addEventListener('DOMContentLoaded', function() {
 		store = pageStore();
+
+		store.get('localization') ?? fetch(webRoot + 'data/localization.json')
+			.then(response => {
+				if (response.ok) 
+					return response.json() 
+				else throw new Error('Failed to load language data')
+			})
+			.then(data => {
+				store.set('localization', JSON.stringify(data));
+			})
+			.catch(error => console.error(error));
 	})
 </script>
 
