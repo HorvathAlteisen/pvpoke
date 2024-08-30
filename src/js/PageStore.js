@@ -1,57 +1,54 @@
-function createWritable(initialValue) {
-    let value = initialValue;
+function writable(initialValue) {
+
     const subscribers = new Set();
 
-    function subscribe(callback) {
-        subscribers.add(callback);
-        callback(value); // Immediately invoke callback with the current value
-
-        // Return a function to unsubscribe
-        return () => {
-            subscribers.delete(callback);
-        };
+    function subscribe(subscriber) {
+        subscribers.add(subscriber);
     }
 
     function set(newValue) {
-        if (newValue !== value) {
-            value = newValue;
-            subscribers.forEach(callback => callback(value));
-        }
+        initialValue = newValue;
+        subscribers.forEach(subscriber => subscriber(initialValue));
     }
 
     function update(updater) {
-        set(updater(value));
+        set(updater(initialValue));
     }
 
     return { subscribe, set, update };
 }
 
 const defaults = {
-    'language': 'en'
+    'language': 'en',
+    'localization': ''
 }
 
 function pageStore() {
-    const { subscribe, update } = createWritable(defaults)
+    const finalValues = { ...defaults };
+    
+    Object.entries(defaults).forEach(([key, value]) => {
+        const storedValue = localStorage.getItem(key);
+        if (storedValue !== null && storedValue !== undefined) {
+            finalValues[key] = storedValue;
+        } else {
+            localStorage.setItem(key, value);
+        }
+    });
+
+    const { subscribe, update } = writable(finalValues);
 
     function setValue(key, value) {
         localStorage.setItem(key, value);
-        update(old => { return { ...old, [key]: value } });
+        update(old => ({ ...old, [key]: value }));
     }
 
     function getValue(key) {
         return localStorage.getItem(key);
     }
 
-    Object.entries(defaults).forEach(([key, value]) => {
-        const item = localStorage.getItem(key);
-        if (item === null || item === undefined) {
-            localStorage.setItem(key, value);
-        }
-    });
-
     return {
         set: setValue,
         get: getValue,
         subscribe
-    }
+    };
 }

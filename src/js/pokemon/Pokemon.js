@@ -22,13 +22,16 @@ function Pokemon(id, i, b){
 		return false;
 	}
 
+	let localization = JSON.parse(PAGE_STORE.get('localization'));
+	let localizedName = `${localization[data.dex-1][PAGE_STORE.get('language')]} ${data.shadowType === 'shadow' ? '(Shadow)' : data.shadowType === 'purified' ? '(Purified)' : ''}`;
+
 	// Base properties
 	this.data = data;
 	this.dex = data.dex;
 	this.speciesId = id;
 	this.aliasId = this.speciesId;
 	this.canonicalId = id.replace("_xs","");
-	this.speciesName = data.speciesName;
+	this.speciesName = localizedName;
 
 	// Use an alias for duplicate Pokemon entries to redirect to the main Pokemon ID
 	if(data.aliasId){

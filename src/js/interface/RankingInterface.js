@@ -2,7 +2,6 @@
 
 var InterfaceMaster = (function () {
     var instance;
-	const localization = JSON.parse(pageStore().get('localization'));
 
     function createInstance() {
 
@@ -308,8 +307,7 @@ var InterfaceMaster = (function () {
 					}
 
 					// Is this the best way to add HTML content? I'm gonna go with no here. But does it work? Yes!
-					const name = `${localization[pokemon.dex-1][pageStore().get('language')]} ${pokemon.shadowType === 'shadow' ? '(Shadow)' : ''}`;
-					var $el = $("<div class=\"rank " + pokemon.types[0] + "\" type-1=\""+pokemon.types[0]+"\" type-2=\""+pokemon.types[1]+"\" data=\""+pokemon.speciesId+"\"><div class=\"expand-label\"></div><div class=\"name-container\"><span class=\"number\">#"+(i+1)+"</span><span class=\"name\">"+ name +"</span><div class=\"moves\">"+moveNameStr+"</div></div><div class=\"rating-container\"><div class=\"rating score-rating\">"+r.score+"</span></div><div class=\"clear\"></div></div><div class=\"details\"></div>");
+					var $el = $("<div class=\"rank " + pokemon.types[0] + "\" type-1=\""+pokemon.types[0]+"\" type-2=\""+pokemon.types[1]+"\" data=\""+pokemon.speciesId+"\"><div class=\"expand-label\"></div><div class=\"name-container\"><span class=\"number\">#"+(i+1)+"</span><span class=\"name\">"+ pokemon.speciesName +"</span><div class=\"moves\">"+moveNameStr+"</div></div><div class=\"rating-container\"><div class=\"rating score-rating\">"+r.score+"</span></div><div class=\"clear\"></div></div><div class=\"details\"></div>");
 
 					switch(sort){
 						case "statproduct":
@@ -1029,8 +1027,7 @@ var InterfaceMaster = (function () {
 
 					battleLink += "/";
 
-					const name = `${localization[opponent.dex-1][pageStore().get('language')]} ${opponent.shadowType === 'shadow' ? '(Shadow)' : ''}`;
-					var $item = $("<div class=\"rank " + opponent.types[0] + "\"><div class=\"name-container\"><span class=\"number\">#"+(n+1)+"</span><span class=\"name\">"+ name +"</span></div><div class=\"rating-container\"><a target=\"_blank\" href=\""+battleLink+"\" class=\"rating\"><span></span>"+m.rating+"<i></i></a><div class=\"clear\"></div></div>");
+					var $item = $("<div class=\"rank " + opponent.types[0] + "\"><div class=\"name-container\"><span class=\"number\">#"+(n+1)+"</span><span class=\"name\">"+ opponent.speciesName +"</span></div><div class=\"rating-container\"><a target=\"_blank\" href=\""+battleLink+"\" class=\"rating\"><span></span>"+m.rating+"<i></i></a><div class=\"clear\"></div></div>");
 					var color = battle.getRatingColor(m.rating);
 
 					$item.find(".rating").addClass(battle.getRatingClass(m.rating));
@@ -1065,8 +1062,7 @@ var InterfaceMaster = (function () {
 						battleLink += Math.min(opponent.fastMove.energyGain * (Math.floor((scenario.energy[1] * 500) / opponent.fastMove.cooldown)), 100);
 					}
 					
-					const name = `${localization[opponent.dex-1][pageStore().get('language')]} ${opponent.shadowType === 'shadow' ? '(Shadow)' : ''}`;
-					var $item = $("<div class=\"rank " + opponent.types[0] + "\"><div class=\"name-container\"><span class=\"number\">#"+(n+1)+"</span><span class=\"name\">"+ name +"</span></div><div class=\"rating-container\"><a target=\"_blank\" href=\""+battleLink+"\" class=\"rating\"><span></span>"+c.rating+"</span><i></i></a><div class=\"clear\"></div></div>");
+					var $item = $("<div class=\"rank " + opponent.types[0] + "\"><div class=\"name-container\"><span class=\"number\">#"+(n+1)+"</span><span class=\"name\">"+ opponent.speciesName +"</span></div><div class=\"rating-container\"><a target=\"_blank\" href=\""+battleLink+"\" class=\"rating\"><span></span>"+c.rating+"</span><i></i></a><div class=\"clear\"></div></div>");
 					var color = battle.getRatingColor(c.rating);
 
 					$item.find(".rating").addClass(battle.getRatingClass(c.rating));

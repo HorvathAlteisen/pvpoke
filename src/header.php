@@ -205,23 +205,17 @@ if(! isset($OG_IMAGE)){
 	}
 	?>
 
-	var store;
-
-	// set standard language
-	window.document.addEventListener('DOMContentLoaded', function() {
-		store = pageStore();
-
-		store.get('localization') ?? fetch(webRoot + 'data/localization.json')
+	const PAGE_STORE = pageStore();
+	PAGE_STORE.get('localization') ?? fetch(webRoot + 'data/localization.json')
 			.then(response => {
 				if (response.ok) 
 					return response.json() 
 				else throw new Error('Failed to load language data')
 			})
 			.then(data => {
-				store.set('localization', JSON.stringify(data));
+				PAGE_STORE.set('localization', JSON.stringify(data));
 			})
 			.catch(error => console.error(error));
-	})
 </script>
 
 	<?php require_once 'modules/ads/base-code.php'; ?>
@@ -263,8 +257,8 @@ if(! isset($OG_IMAGE)){
 					</a>
 					<div class="submenu">
 						<div class="submenu-wrap">
-							<a class="nav-great" href="#" onclick="store.set('language', 'en')">English</a>
-							<a class="nav-ultra" href="#" onclick="store.set('language', 'de')">Deutsch</a>
+							<a class="nav-great" href="#" onclick="PAGE_STORE.set('language', 'en')">English</a>
+							<a class="nav-ultra" href="#" onclick="PAGE_STORE.set('language', 'de')">Deutsch</a>
 						</div>
 					</div>
 				</div>
