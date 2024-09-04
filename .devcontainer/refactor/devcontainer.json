@@ -1,0 +1,13 @@
+{
+  "name": "refactor",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm",
+  "remoteUser": "root",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "svelte.svelte-vscode"
+      ]
+    }
+  },
+  "forwardPorts": [5173]
+}
