@@ -1,22 +1,34 @@
-import { error } from '@sveltejs/kit';
-
-// Allowed values for cup and cp
 const allowedCups = ['premier', 'classic', 'retro', 'fossil', 'zodiac', 'sovereign', 'little'];
 const allowedCps = ['500', '1500', '2500', '10000'];
 
 const capitalizeFirstLetter = (str: string) =>
     str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 
+const cupMap = new Map<string, string>([
+    ['premier', 'Premier Cup'],
+    ['classic', 'Classic Cup'],
+    ['retro', 'Retro Cup'],
+    // Add more slug mappings as needed
+]);
+
+const cpMap = new Map<string, string>([
+    ['500', 'Little Cup'],
+    ['1500', 'Great League'],
+    ['2500', 'Ultra League'],
+    ['10000', 'Master League'],
+    ['10000-40', 'Master League Classic']
+]);
+
 export const load = async ({ params }) => {
-    const { cup, cp } = params;
+    let { cup, cp } = params;
 
     // Validate the cup and cp parameters
     if (!allowedCups.includes(cup)) {
-        throw error(404, 'Invalid cup');
+        cup = 'all';
     }
 
     if (!allowedCps.includes(cp)) {
-        throw error(404, 'Invalid cp');
+        cp = '1500'
     }
 
     let league = '';
