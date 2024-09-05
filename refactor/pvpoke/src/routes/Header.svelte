@@ -4,7 +4,7 @@
 
     import * as config from '$lib/config';
 
-    let siteVersion = '1.31.11.13';
+    export let siteVersion: string = '1.31.11.13';
     //let webRoot = '/'; // Adjust according to your app
     let metaTitle =
         'PvPoke | Open-Source Battle Simulator, Rankings & Team Building for Pokemon GO PvP';
@@ -12,12 +12,6 @@
         'Looking for an edge in Pokemon GO Trainer Battles? Become a master with our open-source Pokemon battle simulator, explore the top Pokemon rankings, and get your team rated for PvP battles.';
     let ogImage = 'https://pvpoke.com/img/og.jpg';
     let canonical = null;
-
-    /*onMount(() => {
-        if (webRoot.includes('src')) {
-            siteVersion = `${Math.floor(Math.random() * 1000)}.${Math.floor(Math.random() * 1000)}.${Math.floor(Math.random() * 1000)}`;
-        }
-    });*/
 
     let pathname = '';
     let getFavicon = (): string => '';
@@ -186,12 +180,3 @@
         </div>
     </div>
 </header>
-
-<main>
-    <div class="hide mega-warning">
-        <b
-            >Stats for unreleased Mega Evolutions are speculative. Don't invest any resources until
-            they're officially released.</b
-        >
-    </div>
-</main>

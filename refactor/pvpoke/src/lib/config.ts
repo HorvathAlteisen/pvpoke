@@ -1,4 +1,5 @@
-export const WEB_ROOT: string = '/pvpoke/src/';
+//export const WEB_ROOT: string = '/pvpoke/src/';
+export const WEB_ROOT: string = '/';
 //export const WEB_HOST: string = 'http://' . $_SERVER['HTTP_HOST'] . $WEB_ROOT;
 export const WEB_HOST: string = 'http://' + 'localhost' + WEB_ROOT;
 export const UA: string = '';
