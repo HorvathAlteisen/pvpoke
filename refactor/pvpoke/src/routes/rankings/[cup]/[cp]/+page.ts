@@ -100,10 +100,6 @@ export const load = async ({ params }) => {
             league = 'Little Cup';
             break;
 
-        case 'mega':
-            league = 'Mega Master League';
-            break;
-
         case 'polaris':
             league = 'Battle Frontier (Polaris)';
             break;
