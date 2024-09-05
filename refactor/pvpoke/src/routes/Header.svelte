@@ -20,7 +20,6 @@
         pathname = $page.route.id!;
 
         if (pathname) {
-            console.log(pathname);
             const isTeamBuilder = pathname.includes('team-builder');
             const isRankings = pathname.includes('rankings');
             const isBattle = pathname.includes('battle');
