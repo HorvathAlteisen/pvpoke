@@ -13,18 +13,7 @@
 </script>
 
 <Header siteVersion={SITE_VERSION} />
-<div class="main-wrap">
-    <div id="main">
-        <div class="hide mega-warning">
-            <b
-                >Stats for unreleased Mega Evolutions are speculative. Don't invest any resources
-                until they're officially released.</b
-            >
-        </div>
 
-        <div class="section home white">
-            <slot />
-        </div>
-    </div>
-</div>
+<slot />
+
 <Footer siteVersion={SITE_VERSION} />
