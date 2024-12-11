@@ -1,7 +1,7 @@
-<script>
+<script lang="ts">
 	import { WEB_HOST, WEB_ROOT, SITE_VERSION, META_TITLE, META_DESCRIPTION, OG_IMAGE, CANONICAL, SETTINGS } from '$lib/config';
-	import Analytics from './modules/analytics.svelte';
-	import BaseCode from './modules/ads/base-code.svelte';
+	/*import Analytics from '$lib/modules/analytics.svelte';
+	import BaseCode from '$lib/modules/ads/base-code.svelte';*/
 
 	// Set meta variables
 	let metaTitle = META_TITLE || 'PvPoke | Open-Source Battle Simulator, Rankings & Team Building for Pokemon GO PvP';
@@ -56,8 +56,8 @@
 	<script src={WEB_ROOT + "js/libs/jquery-3.3.1.min.js"}></script>
 	<script src={WEB_ROOT + "js/interface/RSSReader.js?v=" + SITE_VERSION}></script>
 
-	<Analytics />
-	<BaseCode />
+	<!--<Analytics />
+	<BaseCode />-->
 
 	<script>
 		var host = "{WEB_HOST}";
@@ -82,7 +82,7 @@
 	</script>
 </svelte:head>
 
-<body class:{colorblindMode}>
+<svelte:body class:{colorblindMode} />
 	<!-- The "colorblindMode" class would be set if SETTINGS.colorblindMode == 1 -->
 	<header>
 		<div class="header-wrap">
@@ -161,6 +161,3 @@
 			</div>
 		</div>
 	</header>
-	<div class="main-wrap">
-		<div id="main">
-			<div class="hide mega-warning"><b>Stats for unreleased Mega Evolutions are speculative. Don't invest any resources until they're officially released.</b></div>

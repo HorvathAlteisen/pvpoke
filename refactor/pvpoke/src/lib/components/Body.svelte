@@ -1,11 +1,12 @@
 <script lang="ts">
 	import * as config from '$lib/config';
-	//import Header from '$lib/components/Header.svelte';
-	import Footer from '$lib/components/Footer.svelte';
-	import Body728 from '$lib/components/components/ads/body-728.svelte';
-</script>
 
-<!--<Header />-->
+	//import Body728 from '$lib/components/components/ads/Body728.svelte';
+
+	export const {version} = $props();
+
+	let SITE_VERSION: string = version;
+</script>
 
 <div class="section home white">
 
@@ -63,7 +64,7 @@
 
 	<h3>Pokemon Scarlet &amp; Violet</h3>
 
-	<a name="news"></a>
+	<!--<a name="news"></a>-->
 
 	<a href={config.WEB_ROOT + "tera/"} class="button tera-button">
 		<span class="btn-content-wrap">
@@ -75,7 +76,7 @@
 		</span>
 	</a>
 
-	<Body728 />
+	<!--<Body728 />-->
 
 	<div class="flex new-header">
 		<h3>What's New</h3>
@@ -99,9 +100,9 @@
 		<button class="feed-expand"></button>
 	</div>
 
-	{#if SETTINGS.ads === 1}
+	<!--{#if SETTINGS.ads === 1}
 		<span data-ccpa-link="1"></span>
-	{/if}
+	{/if}-->
 
 </div>
 
@@ -122,5 +123,3 @@
 	<script src={config.WEB_ROOT + "js/interface/HomeInterface.js?v=" + SITE_VERSION}></script>
 	<script src={config.WEB_ROOT + "js/Main.js?v=" + SITE_VERSION}></script>
 {/if}
-
-<Footer />
