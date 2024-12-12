@@ -3,16 +3,17 @@
 
 	//import Body728 from '$lib/components/components/ads/Body728.svelte';
 
-	export const {version} = $props();
+	export const { version } = $props();
 
 	let SITE_VERSION: string = version;
 </script>
 
 <div class="section home white">
+	<p class="small">
+		Welcome to PvPoke.com, an open-source tool for Pokemon GO PvP and GO Battle League!
+	</p>
 
-	<p class="small">Welcome to PvPoke.com, an open-source tool for Pokemon GO PvP and GO Battle League!</p>
-
-	<a href={config.WEB_ROOT + "battle/"} class="button">
+	<a href={config.WEB_ROOT + 'battle/'} class="button">
 		<span class="btn-content-wrap">
 			<span class="btn-icon btn-icon-battle"></span>
 			<span class="btn-label">
@@ -22,7 +23,7 @@
 		</span>
 	</a>
 
-	<a href={config.WEB_ROOT + "rankings/"} class="button">
+	<a href={config.WEB_ROOT + 'rankings/'} class="button">
 		<span class="btn-content-wrap">
 			<span class="btn-icon btn-icon-rankings"></span>
 			<span class="btn-label">
@@ -32,7 +33,7 @@
 		</span>
 	</a>
 
-	<a href={config.WEB_ROOT + "team-builder/"} class="button">
+	<a href={config.WEB_ROOT + 'team-builder/'} class="button">
 		<span class="btn-content-wrap">
 			<span class="btn-icon btn-icon-team"></span>
 			<span class="btn-label">
@@ -42,7 +43,7 @@
 		</span>
 	</a>
 
-	<a href={config.WEB_ROOT + "train/"} class="button">
+	<a href={config.WEB_ROOT + 'train/'} class="button">
 		<span class="btn-content-wrap">
 			<span class="btn-icon btn-icon-train"></span>
 			<span class="btn-label">
@@ -52,7 +53,7 @@
 		</span>
 	</a>
 
-	<a href={config.WEB_ROOT + "contact/"} class="button">
+	<a href={config.WEB_ROOT + 'contact/'} class="button">
 		<span class="btn-content-wrap">
 			<span class="btn-icon btn-icon-heart"></span>
 			<span class="btn-label">
@@ -66,12 +67,14 @@
 
 	<!--<a name="news"></a>-->
 
-	<a href={config.WEB_ROOT + "tera/"} class="button tera-button">
+	<a href={config.WEB_ROOT + 'tera/'} class="button tera-button">
 		<span class="btn-content-wrap">
 			<span class="btn-icon btn-icon-tera"></span>
 			<span class="btn-label">
 				<h2>Tera Raid Counter Calculator</h2>
-				<p>Take on Tera Raid bosses with this tool to look up Pokemon with the best type matchups.</p>
+				<p>
+					Take on Tera Raid bosses with this tool to look up Pokemon with the best type matchups.
+				</p>
 			</span>
 		</span>
 	</a>
@@ -80,7 +83,7 @@
 
 	<div class="flex new-header">
 		<h3>What's New</h3>
-		<a href={config.WEB_ROOT + "rss/"} target="_blank" class="feed-subscribe">RSS Feed</a>
+		<a href={config.WEB_ROOT + 'rss/'} target="_blank" class="feed-subscribe">RSS Feed</a>
 	</div>
 
 	<div class="feed-container expanded">
@@ -92,7 +95,8 @@
 			<div class="news-info">
 				<div class="news-date"></div>
 				<a href="#">
-					<div class="link-text">pvpoke.com</div><div>&rarr;</div>
+					<div class="link-text">pvpoke.com</div>
+					<div>&rarr;</div>
 				</a>
 			</div>
 		</div>
@@ -103,23 +107,22 @@
 	<!--{#if SETTINGS.ads === 1}
 		<span data-ccpa-link="1"></span>
 	{/if}-->
-
 </div>
 
 {#if config.WEB_ROOT.includes('src')}
-	<script src={config.WEB_ROOT + "js/GameMaster.js?v=" + SITE_VERSION}></script>
-	<script src={config.WEB_ROOT + "js/pokemon/Pokemon.js?v=" + SITE_VERSION}></script>
-	<script src={config.WEB_ROOT + "js/interface/HomeInterface.js?v=" + SITE_VERSION}></script>
-	<script src={config.WEB_ROOT + "js/interface/ModalWindow.js?v=" + SITE_VERSION}></script>
-	<script src={config.WEB_ROOT + "js/interface/PokeSearch.js?v=" + SITE_VERSION}></script>
-	<script src={config.WEB_ROOT + "js/battle/TimelineEvent.js?v=" + SITE_VERSION}></script>
-	<script src={config.WEB_ROOT + "js/battle/TimelineAction.js?v=" + SITE_VERSION}></script>
-	<script src={config.WEB_ROOT + "js/battle/Battle.js?v=" + SITE_VERSION}></script>
-	<script src={config.WEB_ROOT + "js/battle/TeamRanker.js?v=" + SITE_VERSION}></script>
-	<script src={config.WEB_ROOT + "js/Main.js?v=" + SITE_VERSION}></script>
+	<script src={config.WEB_ROOT + 'js/GameMaster.js?v=' + SITE_VERSION}></script>
+	<script src={config.WEB_ROOT + 'js/pokemon/Pokemon.js?v=' + SITE_VERSION}></script>
+	<script src={config.WEB_ROOT + 'js/interface/HomeInterface.js?v=' + SITE_VERSION}></script>
+	<script src={config.WEB_ROOT + 'js/interface/ModalWindow.js?v=' + SITE_VERSION}></script>
+	<script src={config.WEB_ROOT + 'js/interface/PokeSearch.js?v=' + SITE_VERSION}></script>
+	<script src={config.WEB_ROOT + 'js/battle/TimelineEvent.js?v=' + SITE_VERSION}></script>
+	<script src={config.WEB_ROOT + 'js/battle/TimelineAction.js?v=' + SITE_VERSION}></script>
+	<script src={config.WEB_ROOT + 'js/battle/Battle.js?v=' + SITE_VERSION}></script>
+	<script src={config.WEB_ROOT + 'js/battle/TeamRanker.js?v=' + SITE_VERSION}></script>
+	<script src={config.WEB_ROOT + 'js/Main.js?v=' + SITE_VERSION}></script>
 {:else}
-	<script src={config.WEB_ROOT + "js/GameMaster.js?v=" + SITE_VERSION}></script>
-	<script src={config.WEB_ROOT + "js/pokemon/Pokemon.js?v=" + SITE_VERSION}></script>
-	<script src={config.WEB_ROOT + "js/interface/HomeInterface.js?v=" + SITE_VERSION}></script>
-	<script src={config.WEB_ROOT + "js/Main.js?v=" + SITE_VERSION}></script>
+	<script src={config.WEB_ROOT + 'js/GameMaster.js?v=' + SITE_VERSION}></script>
+	<script src={config.WEB_ROOT + 'js/pokemon/Pokemon.js?v=' + SITE_VERSION}></script>
+	<script src={config.WEB_ROOT + 'js/interface/HomeInterface.js?v=' + SITE_VERSION}></script>
+	<script src={config.WEB_ROOT + 'js/Main.js?v=' + SITE_VERSION}></script>
 {/if}
