@@ -15,6 +15,7 @@
 	});
 </script>
 
+<Header version={SITE_VERSION} />
 <!--index.php-->
 <div class="main-wrap">
 	<div id="main">
@@ -24,7 +25,6 @@
 				they're officially released.</b
 			>
 		</div>
-		<Header version={SITE_VERSION} />
 		<Body version={SITE_VERSION} />
 		<slot />
 	</div>
