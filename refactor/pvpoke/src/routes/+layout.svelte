@@ -26,7 +26,6 @@
 			>
 		</div>
 		<Body version={SITE_VERSION} />
-		<slot />
 	</div>
 </div>
 <Footer version={SITE_VERSION} />
