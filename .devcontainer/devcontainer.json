@@ -1,10 +1,28 @@
 {
 	"name": "PvPoke",
+
 	// Context is docker/ rather than the repo root, so src/ (~137 MB) and .git
 	// (~1 GB) are never uploaded to the daemon on every build.
 	"build": {
 		"context": "../docker",
 		"dockerfile": "../docker/Dockerfile"
+	},
+
+	// Tooling comes from Features rather than hand-rolled Dockerfile steps.
+	// common-utils creates the non-root vscode user with passwordless sudo; zsh
+	// is off because the image only needs bash.
+	"features": {
+		"ghcr.io/devcontainers/features/common-utils:2": {
+			"installZsh": false,
+			"installOhMyZsh": false,
+			"username": "vscode",
+			"userUid": "automatic",
+			"userGid": "automatic"
+		},
+		"ghcr.io/devcontainers/features/node:2": {
+			"version": "22"
+		},
+		"ghcr.io/devcontainers/features/github-cli:1": {}
 	},
 
 	// Mount the whole repository rather than just src/, so .git is present and
@@ -13,8 +31,10 @@
 	"workspaceMount": "source=${localWorkspaceFolder},target=/var/www/html/pvpoke,type=bind",
 	"workspaceFolder": "/var/www/html/pvpoke",
 
-	// Keep the image's CMD. By default a dev container replaces it with
-	// `sleep infinity`, which would leave Apache never started.
+	// Keep the image's CMD so Apache actually serves. The spec's guidance for
+	// this is explicit: set overrideCommand to false when the application's
+	// startup command has to run. The trade-off is that an Apache config error
+	// stops the container, and therefore the dev container, from starting.
 	"overrideCommand": false,
 
 	"forwardPorts": [80],
@@ -26,9 +46,12 @@
 	},
 
 	// Apache's master process starts as root (it needs to bind :80 and then drops
-	// to www-data); terminals and the VS Code server attach as vscode, which is in
-	// the www-data group so both can write the generated files under src/data.
+	// to www-data); terminals and the VS Code server attach as vscode.
 	"remoteUser": "vscode",
+
+	// Runs once after the container is created, as vscode. Everything that needs
+	// Node or writes into the user's home belongs here rather than in the image.
+	"postCreateCommand": "bash .devcontainer/post-create.sh",
 
 	"customizations": {
 		"vscode": {
