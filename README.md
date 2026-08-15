@@ -10,7 +10,7 @@ See the [Installation](https://github.com/pvpoke/pvpoke/wiki/Installation) secti
 
 ### Dev container
 
-Open the repository in VS Code and run **Dev Containers: Reopen in Container**. The container runs Apache with the repository bind-mounted, so the site is live at **http://localhost/pvpoke/src/** while you edit — the `/pvpoke/src/` prefix comes from `$WEB_ROOT` in `src/modules/config.php`. It includes git, Node (for the *Format JSON* task) and a non-root `vscode` user.
+Open the repository in VS Code and run **Dev Containers: Reopen in Container**. The container runs Apache with the repository bind-mounted, so the site is live at **http://localhost/pvpoke/src/** while you edit — the `/pvpoke/src/` prefix comes from `$WEB_ROOT` in `src/modules/config.php`. It runs as a non-root `vscode` user and includes git, the GitHub CLI, Node 22 (for the *Format JSON* task), and Claude Code with the [ctxline](https://www.npmjs.com/package/ctxline-claude) statusline preconfigured. `gh auth login` and `claude` both need signing in once per container.
 
 To run the same image without VS Code attached:
 
