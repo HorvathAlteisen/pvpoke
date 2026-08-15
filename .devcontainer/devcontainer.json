@@ -1,0 +1,40 @@
+{
+	"name": "PvPoke",
+	// Context is docker/ rather than the repo root, so src/ (~137 MB) and .git
+	// (~1 GB) are never uploaded to the daemon on every build.
+	"build": {
+		"context": "../docker",
+		"dockerfile": "../docker/Dockerfile"
+	},
+
+	// Mount the whole repository rather than just src/, so .git is present and
+	// VS Code's Source Control view works. src/ then lands exactly where Apache
+	// serves it from: /var/www/html/pvpoke/src.
+	"workspaceMount": "source=${localWorkspaceFolder},target=/var/www/html/pvpoke,type=bind",
+	"workspaceFolder": "/var/www/html/pvpoke",
+
+	// Keep the image's CMD. By default a dev container replaces it with
+	// `sleep infinity`, which would leave Apache never started.
+	"overrideCommand": false,
+
+	"forwardPorts": [80],
+	"portsAttributes": {
+		"80": {
+			"label": "PvPoke — open /pvpoke/src/",
+			"onAutoForward": "notify"
+		}
+	},
+
+	// Apache's master process starts as root (it needs to bind :80 and then drops
+	// to www-data); terminals and the VS Code server attach as vscode, which is in
+	// the www-data group so both can write the generated files under src/data.
+	"remoteUser": "vscode",
+
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"bmewburn.vscode-intelephense-client"
+			]
+		}
+	}
+}

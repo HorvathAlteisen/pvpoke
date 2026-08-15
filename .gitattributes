@@ -1,0 +1,8 @@
+# These files are read inside a Linux container. With core.autocrlf=true (the
+# Windows default) they would be checked out with CRLF, which breaks shell line
+# continuations and shebangs. Scoped deliberately to the Docker setup so the
+# rest of the repository keeps its current line-ending behaviour.
+Dockerfile text eol=lf
+*.conf text eol=lf
+*.sh text eol=lf
+.dockerignore text eol=lf

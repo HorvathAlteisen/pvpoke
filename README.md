@@ -8,6 +8,18 @@ This started as a passion project that went from “I wonder what this would loo
 
 See the [Installation](https://github.com/pvpoke/pvpoke/wiki/Installation) section of the PvPoke Wiki.
 
+### Dev container
+
+Open the repository in VS Code and run **Dev Containers: Reopen in Container**. The container runs Apache with the repository bind-mounted, so the site is live at **http://localhost/pvpoke/src/** while you edit — the `/pvpoke/src/` prefix comes from `$WEB_ROOT` in `src/modules/config.php`. It includes git, Node (for the *Format JSON* task) and a non-root `vscode` user.
+
+To run the same image without VS Code attached:
+
+```
+docker compose -f docker/docker-compose.yml up --build
+```
+
+Set `PVPOKE_PORT` to use a port other than 80. The image contains no application code — `src/` is served from the bind mount either way, so edits never need a rebuild.
+
 ## Site Structure
 
 It was about 10 minutes into development when I realized this project would be great in Angular, but that was unfortunately 5 minutes past the point I was willing to backtrack. So allow me to show you the result.
