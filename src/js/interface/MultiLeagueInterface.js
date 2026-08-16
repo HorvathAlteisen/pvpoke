@@ -4,13 +4,14 @@
 //
 // The rest of the site answers "how good is this Pokemon?" one league at a time:
 // pick a league, find the Pokemon, read the stats, change league, repeat. This
-// page inverts that — one Pokemon and one IV spread, every league at once, which
-// is the order the question actually arrives in after you catch something.
+// page inverts that — pick one Pokemon and see every league at once, together
+// with the rest of its evolution family, because the answer to "which league is
+// this for?" is often "a different stage of it".
 //
-// None of the maths here is new. The per-league IV evaluation is the same
-// routine behind PokeSelect's "PvP IV Rankings" modal (autoLevel down to the CP
-// cap, then getIVRank), and the species ratings come from the same overall
-// ranking files the rankings page reads.
+// None of the maths here is new. The best IV spread per league is Pokemon.js's
+// own maximizeStat("overall"), the same call behind the Maximize button in the
+// battle simulator, and the ratings come from the same overall ranking files the
+// rankings page reads.
 
 let InterfaceMaster = (function () {
 	let instance;
@@ -24,16 +25,19 @@ let InterfaceMaster = (function () {
 			let self = this;
 			let gm = GameMaster.getInstance();
 
-			// 51 is the highest cap PokeSelect considers. Any result needing a
-			// level above 40 is flagged as XL in the table, since that's the
-			// practical difference between "I have this" and "I need candy".
+			// 51 is the highest cap PokeSelect considers. Anything above 40 is
+			// flagged as XL, which is the practical difference between "I can
+			// build this today" and "this needs a lot of candy".
 			const LEVEL_CAP = 51;
 
+			// Little Cup's ratings live under its own cup rather than "all",
+			// which holds only 168 entries at 500 CP and omits Little Cup
+			// staples like Meditite entirely.
 			const leagues = [
-				{ cp: 500, name: "Little Cup" },
-				{ cp: 1500, name: "Great League" },
-				{ cp: 2500, name: "Ultra League" },
-				{ cp: 10000, name: "Master League" }
+				{ cp: 500, name: "Little Cup", cup: "little" },
+				{ cp: 1500, name: "Great League", cup: "all" },
+				{ cp: 2500, name: "Ultra League", cup: "all" },
+				{ cp: 10000, name: "Master League", cup: "all" }
 			];
 
 			let rankings = {};        // league CP -> ranking array, already sorted by score
@@ -52,7 +56,7 @@ let InterfaceMaster = (function () {
 					$select.append($("<option />").val(poke.speciesId).text(poke.speciesName));
 				});
 
-				$(".multi-league-input").on("change", ".poke-select, .iv", self.updateResults);
+				$(".multi-league-input").on("change", ".poke-select", self.updateResults);
 
 				loadNextRankings();
 			}
@@ -70,7 +74,7 @@ let InterfaceMaster = (function () {
 				}
 
 				pendingLeague = next.cp;
-				gm.loadRankingData(self, "overall", next.cp, "all");
+				gm.loadRankingData(self, "overall", next.cp, next.cup);
 			}
 
 			this.displayRankingData = function(data){
@@ -78,47 +82,76 @@ let InterfaceMaster = (function () {
 				loadNextRankings();
 			}
 
-			// Evaluate one IV spread in one league. autoLevel walks the level
-			// down from the cap until the Pokemon fits under the league's CP
-			// limit, which is what makes low IVs competitive in capped leagues.
+			// The whole evolution family, in evolution order. getPokemonByFamily
+			// returns dex order, which is wrong for families like Marill, whose
+			// baby form (Azurill, #298) was introduced two generations after the
+			// other two.
 
-			function evaluate(speciesId, ivs, league){
+			function getFamily(speciesId){
+				let poke = gm.getPokemonById(speciesId);
+
+				if(! poke || ! poke.family){
+					return poke ? [poke] : [];
+				}
+
+				let family = gm.getPokemonByFamily(poke.family.id);
+
+				return family.sort((a, b) => evolutionStage(a) - evolutionStage(b));
+			}
+
+			// How many evolutions deep this Pokemon is, counted by walking up
+			// parent links. The guard is for malformed family data rather than
+			// anything in the real gamemaster.
+
+			function evolutionStage(poke){
+				let stage = 0;
+				let current = poke;
+
+				while(current && current.family && current.family.parent && stage < 5){
+					current = gm.getPokemonById(current.family.parent);
+					stage++;
+				}
+
+				return stage;
+			}
+
+			// The best this Pokemon can be in one league: the IV spread with the
+			// highest stat product that still fits under the CP cap.
+
+			function evaluate(poke, league){
 				let battle = new Battle();
 				battle.setCP(league.cp);
 
-				let pokemon = new Pokemon(speciesId, 0, battle);
+				let pokemon = new Pokemon(poke.speciesId, 0, battle);
 				pokemon.initialize(true);
 				pokemon.levelCap = LEVEL_CAP;
-				pokemon.autoLevel = true;
-				pokemon.setIV("atk", ivs.atk);
-				pokemon.setIV("def", ivs.def);
-				pokemon.setIV("hp", ivs.hp);
+				pokemon.maximizeStat("overall");
 
-				let ivRank = pokemon.getIVRank("overall");
 				let ranking = rankings[league.cp] ?? [];
-				let index = ranking.findIndex(entry => entry.speciesId == speciesId);
+				let index = ranking.findIndex(entry => entry.speciesId == poke.speciesId);
 				let entry = index > -1 ? ranking[index] : null;
 
 				return {
-					league: league,
+					speciesId: poke.speciesId,
+					speciesName: poke.speciesName,
+					ivs: pokemon.ivs,
 					cp: pokemon.cp,
 					level: pokemon.level,
-					ivRank: ivRank.rank,
-					ivCount: ivRank.count,
 
 					// Whether the CP cap actually bound this Pokemon. If it
-					// reached the level cap untouched, the league's limit never
-					// came into play and IV rank degenerates into "higher stats
-					// are better" — true of Master League always, and of Ultra
-					// for something like Azumarill that tops out around 1800.
+					// reached the level cap untouched, the cap never came into
+					// play and "best IVs" is trivially 15/15/15 — true of Master
+					// League always, and of Ultra for anything that tops out
+					// below 2500.
 					capped: pokemon.level < LEVEL_CAP,
-					speciesRank: entry ? index + 1 : null,
+
+					rank: entry ? index + 1 : null,
 					score: entry ? entry.score : null,
 					moveset: entry ? entry.moveset : null
 				};
 			}
 
-			// Render one row per league.
+			// One block per league, one row per family member.
 
 			this.updateResults = function(){
 				let speciesId = $(".multi-league-input .poke-select").val();
@@ -127,71 +160,64 @@ let InterfaceMaster = (function () {
 					return;
 				}
 
-				let ivs = {
-					atk: readIV("atk"),
-					def: readIV("def"),
-					hp: readIV("hp")
-				};
-
-				let results = leagues.map(league => evaluate(speciesId, ivs, league));
-
-				// "Best fit" needs both halves to hold. The league's CP cap has to
-				// have actually bound this Pokemon, or IV rank collapses to
-				// "higher stats are better" and #1 says nothing; and the species
-				// has to be ranked there at all, or we'd star Azumarill's Little
-				// Cup row for a league it can't even enter.
-				let candidates = results.filter(result => result.capped && result.speciesRank);
-				let best = candidates.length ? candidates.reduce((a, b) => (a.ivRank <= b.ivRank ? a : b)) : null;
-
+				let family = getFamily(speciesId);
 				let $tbody = $(".multi-league-results tbody");
 				$tbody.html("");
 
-				results.forEach(function(result){
-					let $row = $(".multi-league-results tr.template").first().clone().removeClass("template hide");
+				leagues.forEach(function(league){
+					let results = family.map(poke => evaluate(poke, league));
 
-					$row.find(".league").text(result.league.name);
-					$row.find(".cp").text(result.cp);
-					$row.find(".level").text(result.level + (result.level > 40 ? " (XL)" : ""));
+					// Which stage to actually use in this league. Ranked species
+					// only — an unranked one has no meaningful position to beat.
+					let ranked = results.filter(result => result.rank);
+					let best = ranked.length ? ranked.reduce((a, b) => (a.rank <= b.rank ? a : b)) : null;
 
-					if(result.capped){
-						$row.find(".iv-rank-cell").text("#" + result.ivRank + " of " + result.ivCount);
-					} else{
-						// Ranking 4096 combinations by stat product says nothing
-						// useful when nothing is capping them.
-						$row.find(".iv-rank-cell").text("— not CP capped");
-					}
+					$tbody.append(buildLeagueRow(league));
 
-					if(result.speciesRank){
-						$row.find(".species-rank").text("#" + result.speciesRank);
-						$row.find(".score").text(result.score);
-					} else{
-						$row.find(".species-rank").text("unranked");
-						$row.find(".score").text("—");
-					}
-
-					$row.find(".moveset").text(formatMoveset(result.moveset));
-
-					if(result === best){
-						$row.addClass("best-fit");
-						$row.find(".league").append(" <b>&#9733; best IV fit</b>");
-					}
-
-					$tbody.append($row);
+					results.forEach(function(result){
+						$tbody.append(buildResultRow(result, result === best));
+					});
 				});
 
 				$(".multi-league-results-container").removeClass("hide");
 			}
 
-			// IV inputs are free text; clamp rather than trusting them.
+			function buildLeagueRow(league){
+				let $row = $(".multi-league-results tr.league-template").first().clone().removeClass("league-template hide");
 
-			function readIV(stat){
-				let value = parseInt($(".multi-league-input .iv[iv='" + stat + "']").val());
+				$row.find(".league b").text(league.name);
 
-				if(isNaN(value)){
-					value = 0;
+				return $row;
+			}
+
+			function buildResultRow(result, isBest){
+				let $row = $(".multi-league-results tr.result-template").first().clone().removeClass("result-template hide");
+
+				$row.find(".name").text(result.speciesName);
+				$row.find(".ivs").text(result.ivs.atk + "/" + result.ivs.def + "/" + result.ivs.hp);
+				$row.find(".level").text(result.level + (result.level > 40 ? " (XL)" : ""));
+				$row.find(".cp").text(result.cp);
+
+				if(! result.capped){
+					// Explains why the spread is a flat 15/15/15 here.
+					$row.find(".ivs").append(" <span class='legacy'>(under cap)</span>");
 				}
 
-				return Math.max(0, Math.min(15, value));
+				if(result.rank){
+					$row.find(".rank").text("#" + result.rank);
+					$row.find(".score").text(result.score);
+				} else{
+					$row.find(".rank").text("unranked");
+					$row.find(".score").text("—");
+				}
+
+				$row.find(".moveset").text(formatMoveset(result.moveset));
+
+				if(isBest){
+					$row.find(".name").append(" <b>&#9733;</b>");
+				}
+
+				return $row;
 			}
 
 			function formatMoveset(moveset){
