@@ -43,6 +43,9 @@ let InterfaceMaster = (function () {
 			let rankings = {};        // league CP -> ranking array, already sorted by score
 			let pendingLeague = null; // loadRankingData's callback doesn't say which league it answered
 
+			let searchArr = [];       // the same Pokemon as the dropdown, in search priority order
+			let searchTimeout;
+
 			this.context = "multileague";
 
 			this.init = function(){
@@ -53,12 +56,83 @@ let InterfaceMaster = (function () {
 						return;
 					}
 
-					$select.append($("<option />").val(poke.speciesId).text(poke.speciesName));
+					searchArr.push(poke);
+
+					$select.append($("<option />").val(poke.speciesId).text(poke.displayName));
 				});
 
+				// Search priority order, so that a prefix shared by several
+				// Pokemon lands on the one people mean: "ho" is Ho-Oh, not
+				// Honchkrow.
+				searchArr.sort((a, b) => b.priority - a.priority);
+
 				$(".multi-league-input").on("change", ".poke-select", self.updateResults);
+				$(".multi-league-input").on("keyup", ".poke-search", self.searchPokemon);
+				$(".multi-league-input").on("keydown", ".poke-search", self.searchKeyDown);
+				$(".multi-league-input").on("focus", ".poke-search", self.searchFocus);
 
 				loadNextRankings();
+			}
+
+			// Typing in the search box jumps the dropdown to the first match,
+			// the same behaviour and the same matching rules (name, dex number
+			// or nickname prefix) as the Pokemon search on every other page.
+
+			this.searchPokemon = function(e){
+				// Arrow keys move through the dropdown instead of searching.
+				if(e.which == 38 || e.which == 40){
+					return;
+				}
+
+				// Restarting the timer on every key keeps the search off the
+				// critical path while typing, which matters most on mobile.
+				window.clearTimeout(searchTimeout);
+				searchTimeout = window.setTimeout(submitSearchQuery, $(window).width() >= 768 ? 25 : 250);
+			}
+
+			this.searchKeyDown = function(e){
+				if(e.which != 38 && e.which != 40){
+					return;
+				}
+
+				e.preventDefault();
+
+				let $selected = $(".multi-league-input .poke-select option:selected");
+				let $option = (e.which == 38) ? $selected.prev() : $selected.next();
+
+				if($option.length && ! $option.prop("disabled")){
+					$option.prop("selected", "selected");
+					$(".multi-league-input .poke-select").trigger("change");
+				}
+			}
+
+			this.searchFocus = function(e){
+				$(this).val("");
+
+				// On mobile the keyboard covers the box it was opened from.
+				if($(window).width() <= 768){
+					$("html, body").animate({ scrollTop: $(this).offset().top - 65 }, 500);
+				}
+			}
+
+			function submitSearchQuery(){
+				let searchStr = $(".multi-league-input .poke-search").val().toLowerCase().trim();
+
+				if(searchStr == ''){
+					return;
+				}
+
+				let match = searchArr.find(poke => poke.speciesName.startsWith(searchStr)
+					|| poke.dex == searchStr
+					|| (poke.nicknames && poke.nicknames.some(nickname => nickname.startsWith(searchStr))));
+
+				let $select = $(".multi-league-input .poke-select");
+
+				if(! match || $select.val() == match.speciesId){
+					return;
+				}
+
+				$select.val(match.speciesId).trigger("change");
 			}
 
 			// GameMaster caches each ranking file, but its callback is a single

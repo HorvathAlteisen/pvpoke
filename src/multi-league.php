@@ -17,6 +17,11 @@ require_once 'header.php';
 
 	<div class="multi-league-input" style="margin-bottom: 15px;">
 		<h3 class="section-title">Pokemon</h3>
+
+		<div class="poke-search-container flex">
+			<input class="poke-search" type="text" placeholder="Search name" autocomplete="off">
+		</div>
+
 		<select class="poke-select">
 			<option disabled selected value="">Select a Pokemon</option>
 		</select>
