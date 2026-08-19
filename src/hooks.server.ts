@@ -68,7 +68,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 		});
 	}
 
-	const bodyAttrs = settingIsOne(event.locals.settings.colorblindMode) ? ' class="colorblind"' : '';
+	// header.php: <body class="colorblind"> when colorblindMode == 1. tera/header.php has a
+	// plain <body> (it only reads the `ads` setting), so the tera subtree gets no attributes.
+	const isTera = event.route.id?.startsWith('/(tera)/') ?? false;
+	const bodyAttrs =
+		!isTera && settingIsOne(event.locals.settings.colorblindMode) ? ' class="colorblind"' : '';
 
 	return resolve(event, {
 		transformPageChunk: ({ html }) => html.replace('%pvpoke.bodyattrs%', bodyAttrs)

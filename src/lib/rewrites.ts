@@ -148,6 +148,13 @@ function parseQuery(query: string): Record<string, string> {
  * `/gm-editor/`, `/articles/`, `/pokedex.php`, `/tera/`).
  */
 export function matchRewrite(path: string): RewriteMatch | null {
+	// mod_rewrite (per-directory context) matches against the URL-decoded path, so
+	// /team-builder/all/1500/a%2Cb/ is seen as "team-builder/all/1500/a,b/".
+	try {
+		path = decodeURIComponent(path);
+	} catch {
+		// malformed percent-encoding: match the raw path
+	}
 	for (const r of RULES) {
 		const m = r.re.exec(path);
 		if (m) {

@@ -9,7 +9,7 @@
 
 <svelte:head>
 <meta charset="utf-8">
-<title>Untitled Document</title>
+{@html '<title>Untitled Document</title>'}
 <script src="../js/libs/jquery-3.3.1.min.js"></script>
 </svelte:head>
 

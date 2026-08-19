@@ -80,3 +80,9 @@ export const POST: RequestHandler = async ({ request }) => {
 
 	return text('{ "status": "Success" }');
 };
+
+/** A GET has no $_POST data: the PHP printed the first validation message (404 in prod). */
+export const GET: RequestHandler = async () => {
+	requireDevTools();
+	return text('Data does not have valid keys.');
+};

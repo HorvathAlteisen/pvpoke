@@ -67,3 +67,11 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 		headers: { 'content-type': 'application/json' }
 	});
 };
+
+/** A GET has no $_POST['name']: the PHP echoed the error object (404 in prod). */
+export const GET: RequestHandler = async () => {
+	requireDevTools();
+	return new Response(phpJsonEncode({ response: 'error' }), {
+		headers: { 'content-type': 'text/html; charset=UTF-8' }
+	});
+};

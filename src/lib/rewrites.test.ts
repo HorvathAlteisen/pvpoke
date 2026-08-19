@@ -195,6 +195,11 @@ describe('matchRewrite (port of src/.htaccess)', () => {
 			route: '/team-builder',
 			params: { cup: 'all', cp: '10000-40', t: 'azumarill-1-2-3,medicham-0-1-2' }
 		});
+		// mod_rewrite matches the URL-decoded path: %2C is a comma
+		expect(m('/team-builder/all/1500/azumarill-m-0-1-2%2Cmedicham-m-1-2-0/')).toEqual({
+			route: '/team-builder',
+			params: { cup: 'all', cp: '1500', t: 'azumarill-m-0-1-2,medicham-m-1-2-0' }
+		});
 	});
 
 	it('attack cmp chart', () => {
