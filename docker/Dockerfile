@@ -1,82 +1,57 @@
 # syntax=docker/dockerfile:1
 
-# Dev container image for PvPoke: Apache + mod_php, and nothing else.
+# Production image for PvPoke: the SvelteKit site built with adapter-node, and nothing else.
 #
-# Everything a dev container needs on top of that — the non-root user, Node, the
-# GitHub CLI — comes from Dev Container Features declared in
-# .devcontainer/devcontainer.json, which is what the VS Code guide recommends
-# over installing them by hand here. Claude Code and its statusline are set up in
-# .devcontainer/post-create.sh, because they depend on Node (a Feature, applied
-# after this image is built) and write into the remote user's home.
+# Multi-stage so the final image carries neither pnpm nor devDependencies — only the
+# compiled `build/` output and the runtime dependencies (mysql2 for the training-battle
+# endpoints). The static assets under static/ (css, js, img, data — ~140 MB) are copied
+# into build/client by adapter-node and served by the Node server itself.
 #
-# The application is deliberately not copied in — the dev container bind-mounts
-# the repository over /var/www/html/pvpoke, so edits are live.
+# The build context is the repository root (see docker-compose.yml), so .dockerignore
+# keeps node_modules, .git and the local .env out of the upload.
 #
-# Base image: debian:bookworm-slim, not Alpine — the VS Code server ships
-# glibc-only binaries. What images like php:8.2-apache configure for free —
-# AllowOverride, log redirection, foreground exec — is done explicitly below,
-# because getting any of it wrong fails in confusing ways.
-#
-# The build context is this docker/ directory, so src/ (~137 MB) and .git (~1 GB)
-# are never uploaded to the daemon.
-FROM debian:bookworm-slim
+# The dev container does NOT use this image; it uses a stock devcontainer base image plus
+# Features (see .devcontainer/devcontainer.json) and runs `pnpm dev` against the bind mount.
 
-# src/modules/config.php sets $WEB_ROOT = '/pvpoke/src/', so the repository mounts
-# one directory below Apache's document root and the site is served from
-# http://localhost/pvpoke/src/.
-ENV APP_ROOT=/var/www/html/pvpoke
+# ---------------------------------------------------------------------------------------
+# Stage 1: install dependencies and build.
+FROM node:22-bookworm-slim AS build
 
-# npm arrives with the node Feature; this keeps its "new version available"
-# banner out of post-create output and interactive sessions.
-ENV NPM_CONFIG_UPDATE_NOTIFIER=false
+# pnpm comes with corepack, pinned to the version in package.json ("packageManager"), so
+# the lockfile is installed by the exact pnpm that produced it.
+RUN corepack enable
 
-# apache2 / libapache2-mod-php8.2 / php8.2-mysqli are the site itself — mysqli is
-# the only extension it uses (src/data/training/*.php). The rest is what the
-# Features and the VS Code server expect to find already present: ca-certificates
-# and curl for Feature installers, git for the Source Control view, procps for
-# the process explorer, sudo for the non-root user, and libstdc++6 / libatomic1
-# for the VS Code server's bundled Node.
-# update, install and cache cleanup stay in one RUN so the package lists never
-# land in the image and a cached `apt-get update` can't go stale.
-RUN apt-get update \
-	&& apt-get install -y --no-install-recommends \
-		apache2 \
-		libapache2-mod-php8.2 \
-		php8.2-mysqli \
-		ca-certificates \
-		curl \
-		git \
-		less \
-		libatomic1 \
-		libstdc++6 \
-		procps \
-		sudo \
-	&& rm -rf /var/lib/apt/lists/*
+WORKDIR /app
 
-COPY apache.conf /etc/apache2/conf-available/pvpoke.conf
+# Dependencies first, so the (slow) install layer is cached until the lockfile changes.
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+RUN pnpm install --frozen-lockfile
 
-# mod_rewrite is what .htaccess needs; the conf above is what makes .htaccess be
-# read at all (Debian defaults to AllowOverride None, which ignores it silently).
-# Apache's file logs are redirected to the container's stdout/stderr so
-# `docker logs` works and nothing accumulates inside the container.
-RUN a2enmod rewrite \
-	&& a2enconf pvpoke \
-	&& ln -sfT /dev/stderr /var/log/apache2/error.log \
-	&& ln -sfT /dev/stdout /var/log/apache2/access.log \
-	&& ln -sfT /dev/stdout /var/log/apache2/other_vhosts_access.log
+COPY . .
+RUN pnpm build
 
-# No `USER`: Apache's master process must start as root to bind port 80 (it drops
-# to www-data for workers). The common-utils Feature creates the vscode user and
-# devcontainer.json attaches as it via "remoteUser".
+# Runtime-only node_modules for the final stage (drops svelte, vite, typescript, …).
+RUN pnpm prune --prod
 
-WORKDIR ${APP_ROOT}
-EXPOSE 80
+# ---------------------------------------------------------------------------------------
+# Stage 2: the image that actually runs.
+FROM node:22-bookworm-slim
 
-# Not `apache2ctl -D FOREGROUND`: Debian's apache2ctl is a shell wrapper that
-# runs apache2 as a child instead of exec'ing it, so the wrapper stays PID 1 and
-# swallows SIGTERM — `docker stop` then blocks for the full 10s timeout and
-# SIGKILLs Apache. Sourcing envvars (APACHE_RUN_DIR, APACHE_RUN_USER,
-# APACHE_PID_FILE, ...) and exec'ing makes apache2 itself PID 1. The pidfile
-# removal covers restarting a killed container, where a stale pidfile would
-# otherwise abort startup.
-CMD ["/bin/sh", "-c", ". /etc/apache2/envvars && rm -f \"$APACHE_PID_FILE\" && exec apache2 -D FOREGROUND"]
+ENV NODE_ENV=production
+WORKDIR /app
+
+COPY --from=build /app/build ./build
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/package.json ./package.json
+
+# adapter-node reads PORT/HOST and needs ORIGIN to know the public URL (used for the `host`
+# JS global and absolute links). Override ORIGIN in docker-compose / the environment.
+ENV PORT=3000
+ENV HOST=0.0.0.0
+ENV ORIGIN=http://localhost:3000
+
+# Drop root: node:22 ships a `node` user.
+USER node
+
+EXPOSE 3000
+CMD ["node", "build"]

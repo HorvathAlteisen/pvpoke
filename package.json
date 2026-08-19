@@ -1,0 +1,34 @@
+{
+	"name": "pvpoke",
+	"private": true,
+	"version": "1.37.4.6",
+	"type": "module",
+	"packageManager": "pnpm@11.22.0",
+	"engines": {
+		"node": ">=22"
+	},
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"prepare": "svelte-kit sync || echo ''",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"test": "vitest run",
+		"compile-gamemaster": "tsx scripts/compile-gamemaster.ts"
+	},
+	"dependencies": {
+		"mysql2": "^3.14.0"
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-node": "^5.2.0",
+		"@sveltejs/kit": "^2.63.0",
+		"@sveltejs/vite-plugin-svelte": "^7.1.2",
+		"svelte": "^5.56.1",
+		"svelte-check": "^4.6.0",
+		"tsx": "^4.19.0",
+		"typescript": "^5.9.0",
+		"vite": "^7.1.0",
+		"vitest": "^3.2.0"
+	}
+}

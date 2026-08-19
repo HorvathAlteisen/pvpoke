@@ -6,19 +6,47 @@ This started as a passion project that went from “I wonder what this would loo
 
 ## Running PvPoke
 
-See the [Installation](https://github.com/pvpoke/pvpoke/wiki/Installation) section of the PvPoke Wiki.
+The site is a [SvelteKit](https://svelte.dev/docs/kit) application (Node 22, [pnpm](https://pnpm.io)). It is server-rendered only — no client-side framework code is shipped; the pages are the same HTML the PHP version produced and the original jQuery code in `static/js` does all the work in the browser.
+
+```
+pnpm install          # once (corepack enable && corepack prepare if pnpm is missing)
+pnpm dev              # http://localhost:5173/
+pnpm build            # production build into build/ (adapter-node)
+node build            # serve the build (PORT, HOST, ORIGIN env vars)
+pnpm check            # svelte-check / TypeScript
+pnpm test             # vitest (URL rewrite table etc.)
+```
+
+Configuration is read from environment variables (or a `.env` file in development) — copy `.env.example` and adjust:
+
+| Variable | Purpose |
+|---|---|
+| `PVPOKE_GA_ID` | Google Analytics id for the gtag snippet (empty by default) |
+| `PVPOKE_GOOGLE_AD_CLIENT` | AdSense client id (currently unused; all ad slots are empty) |
+| `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS` | MySQL for the training-battle telemetry (`data/training/*`); schema in `static/data/training/training.sql` |
+| `PVPOKE_DEV_TOOLS` | `1` exposes the developer/content tools (`data/write.php`, `data/compile.php`, ranker pages, …) outside `pnpm dev`; otherwise they 404 |
+| `ORIGIN` | Public origin for `node build` (e.g. `https://pvpoke.com`), used for absolute links and the `host` JS global |
+
+### Where things live
+
+* `src/routes/` — one SvelteKit route per former PHP page (`(main)/rankings`, `(main)/battle`, `(tera)/tera`, …). The clean URLs from the old `.htaccess` (`/rankings/all/1500/overall/`) are mapped in `src/lib/rewrites.ts` and `src/hooks.ts`; the PHP endpoints keep their URLs (`src/routes/data/settingsCookie.php/+server.ts` answers `/data/settingsCookie.php`).
+* `src/lib/components/` — the former PHP modules (`pokeselect.php` → `PokeSelect.svelte`, header/footer, …).
+* `static/` — everything that is served as-is at the same URL as before: `css/`, `js/`, `img/`, `data/` (gamemaster, rankings, groups, overrides, training), `articles/articles.json` + `articles/community-day/data`, `rss/feed.xml`, `tera/{css,img,js,data}`. Article images (`static/articles/article-assets/`) are not in the repository.
+* `scripts/` — `php-diff.sh` (compares a page with the legacy PHP reference site), `cupwizard.*`, `pretty-format-json.js`.
+
+In `pnpm dev` the site behaves like the old local PHP setup: random cache-busting `?v=` on every load, the developer panel in the footer, the extra home-page scripts, and the dev-only tools (gamemaster compile, override editor, ranker pages, RSS feed editor) are enabled. Set `PVPOKE_DEV_TOOLS=1` to enable those tools on a production build.
 
 ### Dev container
 
-Open the repository in VS Code and run **Dev Containers: Reopen in Container**. The container runs Apache with the repository bind-mounted, so the site is live at **http://localhost/pvpoke/src/** while you edit — the `/pvpoke/src/` prefix comes from `$WEB_ROOT` in `src/modules/config.php`. It runs as a non-root `vscode` user and includes git, the GitHub CLI, Node 22 (for the *Format JSON* task), and Claude Code with the [ctxline](https://www.npmjs.com/package/ctxline-claude) statusline preconfigured. `gh auth login` and `claude` both need signing in once per container.
+Open the repository in VS Code and run **Dev Containers: Reopen in Container**. The container is a stock Debian dev image with Node 22, pnpm, the GitHub CLI, the Svelte extension, and Claude Code with the [ctxline](https://www.npmjs.com/package/ctxline-claude) statusline preconfigured; `pnpm install` runs on creation. Start the site with `pnpm dev` — port 5173 is forwarded. `gh auth login` and `claude` both need signing in once per container.
 
-To run the same image without VS Code attached:
+### Docker
 
 ```
 docker compose -f docker/docker-compose.yml up --build
 ```
 
-Set `PVPOKE_PORT` to use a port other than 80. The image contains no application code — `src/` is served from the bind mount either way, so edits never need a rebuild.
+builds the production image (`docker/Dockerfile`, multi-stage `node:22`) and starts it together with a MySQL 8 container that is initialised from `static/data/training/training.sql`. Set `PVPOKE_PORT` to use a port other than 80 and `ORIGIN` to the public URL; the other variables from `.env.example` are passed through.
 
 ## Site Structure
 
@@ -26,7 +54,7 @@ It was about 10 minutes into development when I realized this project would be g
 
 Here’s a rundown on how most of the pages operate:
 
-1. Main PHP file generates base HTML. These PHP files contain HTML only, and have no inherent functionality. They import any necessary Javascript files. These are our views, so to speak.
+1. A Svelte page component (formerly a PHP file) generates base HTML. These contain HTML only, and have no inherent functionality. They import any necessary Javascript files. These are our views, so to speak.
 2. `GameMaster.js` loads the `data/gamemaster.json` file, which contains all Pokemon and move data. This is our model.
 3. Once the data is loaded, `GameMaster.js` calls an interface object from one of several script files in the `/js/interface` directory to initialize. This object does things like populate dropdowns with data, create event listeners, etc. These are kind of extensions of the view.
 4. Once the interface receives a certain interaction, it’ll call on an object like `Battle.js` or `TeamRanker.js` to receive user input, process it along with the model data, and return results to be displayed by the interface. These files are like the controller.
@@ -37,7 +65,7 @@ It’s something just close enough to MVC that I get to pat myself on the back, 
 
 Rankings can be generated locally using the following steps:
 
-1. In your browser, visit the `ranker.php` page.
+1. Run `pnpm dev` and, in your browser, visit the `ranker.php` page.
 2. Open the developer console. This is where you’ll see output.
 3. Run the simulations. This may take a few minutes. The `ranker.php` page will generate rankings for every league and category, and save the JSON results to the `/data` directory.
 4. If you want to generate overall rankings, visit the `rankersandbox.php` page.

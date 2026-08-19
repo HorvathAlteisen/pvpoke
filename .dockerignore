@@ -1,0 +1,11 @@
+# Build context for docker/Dockerfile is the repository root.
+node_modules
+.svelte-kit
+build
+.git
+.env
+.env.*
+!.env.example
+.pnpm-store
+.devcontainer
+docker

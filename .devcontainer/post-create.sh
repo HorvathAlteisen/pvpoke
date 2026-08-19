@@ -6,6 +6,11 @@
 # dev container guide reserves postCreateCommand for.
 set -euo pipefail
 
+echo "Installing project dependencies..."
+# pnpm is installed by the node Feature (pnpmVersion) and pinned through the
+# "packageManager" field in package.json; --frozen-lockfile keeps the install honest.
+pnpm install --frozen-lockfile
+
 echo "Installing Claude Code..."
 # No official Anthropic Feature exists, and the community one is third-party, so
 # this stays an explicit npm install. The node Feature installs Node under
@@ -21,14 +26,9 @@ mkdir -p "$HOME/.claude"
 npx -y ctxline-claude@latest
 grep -q '"statusLine"' "$HOME/.claude/settings.json"
 
-echo "Configuring git and group membership..."
+echo "Configuring git..."
 # The workspace is a bind mount owned by the host user, which git otherwise
 # refuses to operate on as "dubious ownership".
 sudo git config --system --add safe.directory "$PWD"
-
-# Apache writes the files ranker.php generates as www-data. Joining the group
-# keeps them editable from the container on hosts that enforce file ownership;
-# it is a no-op on Docker Desktop, where bind mounts ignore it.
-sudo usermod -aG www-data "$(id -un)"
 
 echo "post-create complete."

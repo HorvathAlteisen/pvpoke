@@ -1,2 +1,16 @@
-src/modules/config.php
-src/articles/article-assets
+static/articles/article-assets
+
+# Node / SvelteKit
+node_modules
+/.svelte-kit
+/build
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# pnpm store fallback (created when the global store is on another filesystem)
+.pnpm-store

@@ -1,62 +1,46 @@
 {
 	"name": "PvPoke",
 
-	// Context is docker/ rather than the repo root, so src/ (~137 MB) and .git
-	// (~1 GB) are never uploaded to the daemon on every build.
-	"build": {
-		"context": "../docker",
-		"dockerfile": "../docker/Dockerfile"
-	},
+	// A stock dev container base image (Debian, non-root vscode user with passwordless
+	// sudo already set up) — no custom Dockerfile needed anymore now that the site is a
+	// Node application. Node itself and the GitHub CLI come from Features.
+	"image": "mcr.microsoft.com/devcontainers/base:bookworm",
 
-	// Tooling comes from Features rather than hand-rolled Dockerfile steps.
-	// common-utils creates the non-root vscode user with passwordless sudo; zsh
-	// is off because the image only needs bash.
 	"features": {
-		"ghcr.io/devcontainers/features/common-utils:2": {
-			"installZsh": false,
-			"installOhMyZsh": false,
-			"username": "vscode",
-			"userUid": "automatic",
-			"userGid": "automatic"
-		},
-		"ghcr.io/devcontainers/features/node:2": {
-			"version": "22"
+		"ghcr.io/devcontainers/features/node:1": {
+			"version": "22",
+			"pnpmVersion": "latest"
 		},
 		"ghcr.io/devcontainers/features/github-cli:1": {}
 	},
 
-	// Mount the whole repository rather than just src/, so .git is present and
-	// VS Code's Source Control view works. src/ then lands exactly where Apache
-	// serves it from: /var/www/html/pvpoke/src.
+	// Mount the whole repository so .git is present and VS Code's Source Control view
+	// works. The path is kept from the PHP days so existing tooling and docs still apply.
 	"workspaceMount": "source=${localWorkspaceFolder},target=/var/www/html/pvpoke,type=bind",
 	"workspaceFolder": "/var/www/html/pvpoke",
 
-	// Keep the image's CMD so Apache actually serves. The spec's guidance for
-	// this is explicit: set overrideCommand to false when the application's
-	// startup command has to run. The trade-off is that an Apache config error
-	// stops the container, and therefore the dev container, from starting.
-	"overrideCommand": false,
+	// Nothing has to run at container start: the dev server is started by hand with
+	// `pnpm dev` (VS Code picks the forwarded port up automatically).
+	"overrideCommand": true,
 
-	"forwardPorts": [80],
+	"forwardPorts": [5173],
 	"portsAttributes": {
-		"80": {
-			"label": "PvPoke — open /pvpoke/src/",
+		"5173": {
+			"label": "PvPoke — pnpm dev",
 			"onAutoForward": "notify"
 		}
 	},
 
-	// Apache's master process starts as root (it needs to bind :80 and then drops
-	// to www-data); terminals and the VS Code server attach as vscode.
 	"remoteUser": "vscode",
 
-	// Runs once after the container is created, as vscode. Everything that needs
-	// Node or writes into the user's home belongs here rather than in the image.
+	// Runs once after the container is created, as vscode: installs the dependencies and
+	// the Claude Code tooling (see post-create.sh).
 	"postCreateCommand": "bash .devcontainer/post-create.sh",
 
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"bmewburn.vscode-intelephense-client"
+				"svelte.svelte-vscode"
 			]
 		}
 	}
