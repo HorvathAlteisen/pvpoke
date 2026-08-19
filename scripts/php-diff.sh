@@ -50,6 +50,7 @@ s = s.split('http://localhost' + refRoot).join(localBase + '/');
 s = s.split(refRoot).join('/');
 // cache busters (random in dev) and the footer version
 s = s.replace(/\?v=[0-9][0-9.]*/g, '?v=V');
+s = s.replace(/\?=[0-9][0-9.]*/g, '?=V');
 s = s.replace(/(<a href="https:\/\/github.com\/pvpoke\/pvpoke\/releases">)[0-9.]+(<\/a>)/g, '$1VERSION$2');
 s = s.replace(/var siteVersion = "[0-9.]+";/g, 'var siteVersion = "V";');
 // decode entities (&amp; vs &, &#039; vs ', …)
