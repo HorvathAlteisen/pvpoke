@@ -42,7 +42,9 @@ export default defineConfig({
 		coverage: {
 			provider: 'v8',
 			include: ['static/js/**/*.js', 'static/tera/js/**/*.js', 'scripts/*.js'],
-			exclude: ['static/js/libs/jquery-3.3.1.min.js'],
+			// Vendored third-party. Neither is ours to fix, so neither is ours to cover.
+			// See tests/legacy/CONVENTIONS.md §11.
+			exclude: ['static/js/libs/jquery-3.3.1.min.js', 'static/js/libs/hexagon-chart.js'],
 			reporter: ['text', 'html', 'json-summary'],
 			reportsDirectory: 'coverage',
 			all: true

@@ -158,9 +158,17 @@ describe('closeModalWindow', () => {
 		expect($('.modal').length).toBe(1);
 	});
 
-	it('is a no-op when no modal is open', () => {
-		expect(() => closeModalWindow()).not.toThrow();
-		expect($('.modal').length).toBe(0);
+	it('leaves the document exactly as it found it when there is no modal to close', () => {
+		const before = env.document.body.innerHTML;
+
+		modalWindow('Title', '.template');
+		closeModalWindow();
+		expect(env.document.body.innerHTML).toBe(before);
+
+		// Second close: nothing left to remove, and nothing else may be removed either.
+		closeModalWindow();
+		expect(env.document.body.innerHTML).toBe(before);
+		expect($('body > .template').length).toBe(1);
 	});
 });
 
@@ -182,14 +190,25 @@ describe('setModalClosePrevention', () => {
 		expect($('.modal').length).toBe(0);
 	});
 
-	it('re-arming extends prevention past the first timeout', () => {
+	// Frozen-behaviour quirk, pinned rather than fixed: setModalClosePrevention() never clears the
+	// timeout it is replacing, so re-arming does NOT extend prevention — the *earlier* timeout
+	// clears the flag on its original schedule and the later one is a no-op repeat.
+	it('does not extend prevention when re-armed: the earlier timeout still clears the flag', () => {
+		modalWindow('Title', '.template');
+
 		setModalClosePrevention(100);
 		timers.tick(50);
-		setModalClosePrevention(100);
+		setModalClosePrevention(100); // asks for prevention until t=150
 
-		timers.tick(50); // first timeout fires here
-		expect(env.get('closePrevention')).toBe(false); // known quirk: the first timer wins
+		timers.tick(50); // t=100 — the FIRST timeout fires
+		expect(env.get('closePrevention')).toBe(false);
 
-		expect(timers.pending()).toBe(1);
+		// The observable consequence: the modal is closeable 50 ms before the re-arm asked for.
+		closeModalWindow();
+		expect($('.modal').length).toBe(0);
+
+		// The orphaned second timeout still fires at t=150 and is harmless.
+		timers.tick(50);
+		expect(env.get('closePrevention')).toBe(false);
 	});
 });

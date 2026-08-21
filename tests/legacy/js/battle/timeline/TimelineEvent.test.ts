@@ -23,10 +23,8 @@ beforeAll(() => {
 afterAll(() => env.dispose());
 
 describe('TimelineEvent', () => {
-	it('is a class binding in the context, not a property of globalThis', () => {
-		expect(typeof TimelineEvent).toBe('function');
-		expect(env.ctx.TimelineEvent).toBeUndefined();
-	});
+	// (That `TimelineEvent` is a lexical binding and not on `globalThis` is harness semantics,
+	// covered once in harness.test.ts — not re-tested per file.)
 
 	it('stores every constructor argument verbatim', () => {
 		const actor = { id: 'azumarill' };

@@ -21,7 +21,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
 import { JSDOM } from 'jsdom';
-import { vi } from 'vitest';
+import { onTestFinished, vi } from 'vitest';
 
 /** Absolute path of the repo root. All `load()` paths are resolved against it. */
 export const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
@@ -75,6 +75,32 @@ export const DEFAULT_SETTINGS = Object.freeze({
 	gamemaster: 'gamemaster',
 	pokeboxId: 0,
 	pokeboxLastDateTime: 0,
+	xls: true,
+	rankingDetails: 'one-page',
+	hardMovesetLinks: 0,
+	colorblindMode: 0,
+	performanceMode: 0,
+	theme: 'default'
+});
+
+/**
+ * The `settings` object emitted by `src/lib/components/layout/Globals.svelte` when a settings
+ * cookie *is* present. Same keys, different JS types: `pokeboxId`/`pokeboxLastDateTime` are
+ * emitted as **strings** and `animateTimeline`/`xls` as **booleans**, because the PHP the
+ * component mirrors interpolated `intval()` inside quotes for the first two and used a ternary
+ * for the second two. That flips branches — `interface/Pokebox.js:258` tests
+ * `settings.pokeboxId && settings.pokeboxId > 0`, and `"0"` is truthy where `0` is not.
+ *
+ * If the file under test reads `pokeboxId`, `pokeboxLastDateTime`, `animateTimeline` or `xls`,
+ * test it against both shapes (see CONVENTIONS §4).
+ */
+export const COOKIE_SETTINGS = Object.freeze({
+	defaultIVs: 'gamemaster',
+	animateTimeline: true,
+	matrixDirection: 'row',
+	gamemaster: 'gamemaster',
+	pokeboxId: '0',
+	pokeboxLastDateTime: '0',
 	xls: true,
 	rankingDetails: 'one-page',
 	hardMovesetLinks: 0,
@@ -196,6 +222,22 @@ export interface LegacyEnvOptions {
 	globals?: Record<string, any>;
 	/** Load the vendored jQuery 3.3.1. Default true. */
 	jquery?: boolean;
+	/**
+	 * Let jQuery effects (`.animate()`, `.fadeIn()`, `.slideUp()`, ...) run for real. Default
+	 * `false`, i.e. the harness sets `$.fx.off = true`. jQuery 3.3.1 drives its `fx` queue from
+	 * `requestAnimationFrame`, which JSDOM's `pretendToBeVisual` supplies for real and
+	 * `installFakeTimers` does NOT patch, so with effects on a completion callback either never
+	 * fires inside the test or fires after `dispose()`. With `$.fx.off` the target jumps to its
+	 * final state and the callback runs synchronously, which is what a test wants to assert on.
+	 */
+	fx?: boolean;
+	/**
+	 * Fixed value for `Math.random` inside the context. Default `0.5`; pass `null` to leave the
+	 * real `Math.random` alone. `battle/Battle.js`, `battle/actions/ActionLogic.js`,
+	 * `training/TrainingAI.js` and `interface/PokeSelect.js` all roll dice — vary this per test
+	 * to reach both sides of a roll.
+	 */
+	random?: number | null;
 	/** Install stubs for third-party globals. Default true; pass an object to pick. */
 	stubs?: boolean | LegacyEnvStubs;
 	/** Routes registered on the fake ajax layer before anything loads. */
@@ -261,8 +303,14 @@ export interface LegacyEnv {
 	logs: LegacyLogs;
 	/** Scripts loaded so far, in order. */
 	readonly loaded: string[];
-	/** Close the JSDOM window. Call from `afterAll`/`afterEach`. */
+	/**
+	 * Close the JSDOM window. Idempotent. An env created *inside a test* is disposed
+	 * automatically via vitest's `onTestFinished`, so a failing assertion cannot leak it; an env
+	 * created in `beforeAll` still needs an explicit `afterAll(() => env.dispose())`.
+	 */
 	dispose(): void;
+	/** Whether {@link dispose} has run. (JSDOM does not implement `window.closed`.) */
+	readonly disposed: boolean;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -305,6 +353,8 @@ export function createLegacyEnv(opts: LegacyEnvOptions = {}): LegacyEnv {
 		get: pageGet = false,
 		globals = {},
 		jquery = true,
+		fx = false,
+		random = 0.5,
 		stubs = true,
 		routes = [],
 		dispatch = 'sync',
@@ -324,6 +374,10 @@ export function createLegacyEnv(opts: LegacyEnvOptions = {}): LegacyEnv {
 
 	const logs = EMPTY_LOGS();
 	const loaded: string[] = [];
+
+	// Deterministic by default: pinned here rather than in createBattleEnv, because
+	// `interface/PokeSelect.js` (and anything reached through createLegacyEnv) rolls dice too.
+	if (random !== null) ctx.Math.random = () => random;
 
 	Object.assign(ctx, {
 		host,
@@ -400,7 +454,12 @@ export function createLegacyEnv(opts: LegacyEnvOptions = {}): LegacyEnv {
 			routeList.push({ pattern, responder });
 		},
 		file(pattern, relPath) {
-			routeList.push({ pattern, responder: () => loadFromDisk(resolve(REPO_ROOT, relPath), 'json') });
+			// dataType comes from the request, not hardcoded: `RSSReader.js` and
+			// `devtools/RSSFeedInterface.js` ask for `dataType: 'xml'` and must get a Document.
+			routeList.push({
+				pattern,
+				responder: (req: AjaxRequest) => loadFromDisk(resolve(REPO_ROOT, relPath), req.dataType)
+			});
 		},
 		fail(pattern, o) {
 			routeList.push({ pattern, responder: () => ajaxError(o) });
@@ -490,13 +549,9 @@ export function createLegacyEnv(opts: LegacyEnvOptions = {}): LegacyEnv {
 		const ctxThis = settings.context ?? settings;
 
 		const run = () => {
-			let result: { data?: any; failure?: AjaxFailure };
-			try {
-				result = resolveResponse(req);
-			} catch (e) {
-				// An unhandled URL is a harness misconfiguration, never an ajax `error` branch.
-				throw e;
-			}
+			// An unhandled URL throws out of here: it is a harness misconfiguration, never an
+			// ajax `error` branch, so it must reach the test runner rather than the code under test.
+			const result = resolveResponse(req);
 			if (result.failure) {
 				const f = result.failure;
 				xhr.status = f.status;
@@ -536,6 +591,7 @@ export function createLegacyEnv(opts: LegacyEnvOptions = {}): LegacyEnv {
 	/* ------------------------------ bootstrap ------------------------------ */
 
 	let hoverEl: any = null;
+	let disposed = false;
 
 	const env: LegacyEnv = {
 		window,
@@ -581,10 +637,27 @@ export function createLegacyEnv(opts: LegacyEnvOptions = {}): LegacyEnv {
 			if (!ctx.$) throw new Error('[legacy harness] env.hover() needs jQuery (jquery: true)');
 			hoverEl = target == null ? null : (ctx.$(target)[0] ?? null);
 		},
+		get disposed() {
+			return disposed;
+		},
 		dispose() {
+			if (disposed) return;
+			disposed = true;
 			window.close();
 		}
 	};
+
+	// Envs leak on a failed assertion: `dispose()` written as the last statement of a test never
+	// runs when an expect above it throws, and `isolate: false` keeps the JSDOM window alive for
+	// the worker's whole life. Register the teardown with vitest instead. `onTestFinished` throws
+	// when there is no test running (an env built in `beforeAll`/module scope), in which case the
+	// test file's own `afterAll(() => env.dispose())` is still the contract — dispose() is
+	// idempotent, so doing both is safe.
+	try {
+		onTestFinished(() => env.dispose());
+	} catch {
+		/* not inside a test — the caller disposes */
+	}
 
 	if (jquery) {
 		env.load(JQUERY_PATH);
@@ -594,6 +667,10 @@ export function createLegacyEnv(opts: LegacyEnvOptions = {}): LegacyEnv {
 		$.get = shorthand('GET');
 		$.post = shorthand('POST');
 		$.ajaxSetup = () => {};
+		// See the `fx` option: jQuery's effects queue runs off requestAnimationFrame, which
+		// installFakeTimers does not reach. Off by default so `.animate(..., cb)` completes
+		// synchronously and `cb` is observable from the test.
+		if (!fx) $.fx.off = true;
 		// JSDOM has no pointer and nwsapi throws on `:hover`, but a dozen legacy click handlers
 		// branch on `$(".thing:hover").length`. Teach Sizzle a `:hover` driven by `env.hover()`.
 		$.expr.pseudos.hover = (elem: any) =>
@@ -642,6 +719,11 @@ export function syntheticGameMaster(overrides: Record<string, any> = {}): any {
 		shadowPokemon: [],
 		greatLeagueIneligible: [],
 		pokemon: [
+			// The optional fields are split deliberately between the two entries so that BOTH arms
+			// of every `if(pokemon.tags)` / `if(pokemon.thirdMoveCost)` style branch are reachable
+			// against the synthetic gamemaster: Azumarill has `tags` + `level25CP` and no
+			// `buddyDistance`/`thirdMoveCost`, Machamp has the other two and neither of the first.
+			// Keep it that way when you extend this fixture.
 			{
 				dex: 184,
 				speciesName: 'Azumarill',
@@ -650,7 +732,9 @@ export function syntheticGameMaster(overrides: Record<string, any> = {}): any {
 				types: ['water', 'fairy'],
 				fastMoves: ['BUBBLE'],
 				chargedMoves: ['ICE_BEAM', 'PLAY_ROUGH'],
+				tags: ['teraeligible'],
 				defaultIVs: { cp1500: [43, 4, 15, 13], cp2500: [50, 15, 15, 15], cp500: [12, 4, 15, 15] },
+				level25CP: 1258,
 				released: true,
 				family: { id: 'FAMILY_MARILL', parent: 'marill' }
 			},
@@ -663,31 +747,41 @@ export function syntheticGameMaster(overrides: Record<string, any> = {}): any {
 				fastMoves: ['COUNTER'],
 				chargedMoves: ['CROSS_CHOP', 'ROCK_SLIDE'],
 				defaultIVs: { cp1500: [21.5, 0, 14, 13], cp2500: [40, 0, 15, 14], cp500: [7, 6, 15, 14] },
+				buddyDistance: 3,
+				thirdMoveCost: 10000,
 				released: true,
 				family: { id: 'FAMILY_MACHOP', parent: 'machoke' }
 			}
 		],
+		// `abbreviation` is optional in the real gamemaster and `GameMaster.js:808` branches on it
+		// (predefined vs. built from the initials of each word), so BUBBLE deliberately has none.
 		moves: [
 			{ moveId: 'BUBBLE', name: 'Bubble', type: 'water', power: 8, energy: 0, energyGain: 11, cooldown: 1500, archetype: 'Fast Charge', turns: 3 },
-			{ moveId: 'COUNTER', name: 'Counter', type: 'fighting', power: 8, energy: 0, energyGain: 7, cooldown: 1000, archetype: 'General', turns: 2 },
-			{ moveId: 'ICE_BEAM', name: 'Ice Beam', type: 'ice', power: 90, energy: 55, energyGain: 0, cooldown: 500, archetype: 'High Energy', turns: 1 },
-			{ moveId: 'PLAY_ROUGH', name: 'Play Rough', type: 'fairy', power: 90, energy: 60, energyGain: 0, cooldown: 500, archetype: 'High Energy', turns: 1 },
-			{ moveId: 'CROSS_CHOP', name: 'Cross Chop', type: 'fighting', power: 50, energy: 45, energyGain: 0, cooldown: 500, archetype: 'Low Energy', turns: 1 },
-			{ moveId: 'ROCK_SLIDE', name: 'Rock Slide', type: 'rock', power: 75, energy: 45, energyGain: 0, cooldown: 500, archetype: 'Low Energy', turns: 1 }
+			{ moveId: 'COUNTER', name: 'Counter', abbreviation: 'Co', type: 'fighting', power: 8, energy: 0, energyGain: 7, cooldown: 1000, archetype: 'General', turns: 2 },
+			{ moveId: 'ICE_BEAM', name: 'Ice Beam', abbreviation: 'IB', type: 'ice', power: 90, energy: 55, energyGain: 0, cooldown: 500, archetype: 'High Energy', turns: 1 },
+			{ moveId: 'PLAY_ROUGH', name: 'Play Rough', abbreviation: 'PR', type: 'fairy', power: 90, energy: 60, energyGain: 0, cooldown: 500, archetype: 'High Energy', turns: 1 },
+			{ moveId: 'CROSS_CHOP', name: 'Cross Chop', abbreviation: 'CC', type: 'fighting', power: 50, energy: 45, energyGain: 0, cooldown: 500, archetype: 'Low Energy', turns: 1 },
+			{ moveId: 'ROCK_SLIDE', name: 'Rock Slide', abbreviation: 'RS', type: 'rock', power: 75, energy: 45, energyGain: 0, cooldown: 500, archetype: 'Low Energy', turns: 1 }
 		],
 		...overrides
 	};
 }
 
 export interface GameMasterEnvOptions extends LegacyEnvOptions {
-	/** Use {@link syntheticGameMaster} instead of the real 1.7 MB `static/data/gamemaster.json`. */
-	synthetic?: boolean;
-	/** Serve this exact object as the gamemaster (wins over `synthetic`). */
+	/**
+	 * Serve the real 1.7 MB `static/data/gamemaster.json` instead of {@link syntheticGameMaster}.
+	 * Opt-in on purpose: against the real file the only assertions that stay true across a
+	 * gamemaster recompile are stable identity facts (dex numbers, move ids). See CONVENTIONS §4.
+	 */
+	real?: boolean;
+	/** Serve this exact object as the gamemaster (wins over `real`). */
 	gamemaster?: any;
 }
 
 /**
- * An env with jQuery + `static/js/GameMaster.js` loaded and the singleton fully populated.
+ * An env with jQuery + `static/js/GameMaster.js` loaded and the singleton fully populated from
+ * {@link syntheticGameMaster} — 2 Pokemon and 6 moves whose every number you can compute by hand.
+ * Pass `{ real: true }` for the real `static/data/gamemaster.json`.
  *
  * `GameMaster` fires its `$.ajax` from inside the still-building IIFE, so this helper runs the
  * ajax layer in `'deferred'` mode, calls `getInstance()`, then flushes — after which the mock is
@@ -695,13 +789,16 @@ export interface GameMasterEnvOptions extends LegacyEnvOptions {
  *
  * ```ts
  * const { env, gm } = createGameMasterEnv();
- * expect(gm.getPokemonById('azumarill').dex).toBe(184);
+ * expect(gm.getPokemonById('azumarill').baseStats.atk).toBe(112);
  * ```
+ *
+ * This helper is **main-site only**: `static/tera/js/GameMaster.js` declares the same `GameMaster`
+ * global but loads `tera/data/gamemaster.json` and has a different object shape. See CONVENTIONS §5i.
  */
 export function createGameMasterEnv(opts: GameMasterEnvOptions = {}): { env: LegacyEnv; gm: any } {
-	const { synthetic, gamemaster, ...rest } = opts;
+	const { real = false, gamemaster, ...rest } = opts;
 	const env = createLegacyEnv({ ...rest, jquery: true, dispatch: 'deferred' });
-	const data = gamemaster ?? (synthetic ? syntheticGameMaster() : undefined);
+	const data = gamemaster ?? (real ? undefined : syntheticGameMaster());
 	if (data) {
 		env.ajax.route(/data\/gamemaster(\.min)?\.json/, () => structuredClone(data));
 	}
@@ -712,8 +809,12 @@ export function createGameMasterEnv(opts: GameMasterEnvOptions = {}): { env: Leg
 	return { env, gm };
 }
 
-/** Legacy scripts that make up the battle simulator, in dependency order. */
-export const BATTLE_STACK = [
+/**
+ * Legacy scripts that make up the battle simulator, in dependency order.
+ * Frozen: `isolate: false` shares module scope between test files in a worker, so a test that
+ * pushed onto this array would silently change what every later file loads.
+ */
+export const BATTLE_STACK: readonly string[] = Object.freeze([
 	'static/js/GameMaster.js',
 	'static/js/pokemon/Pokemon.js',
 	'static/js/battle/timeline/TimelineEvent.js',
@@ -722,15 +823,18 @@ export const BATTLE_STACK = [
 	'static/js/battle/actions/ActionLogic.js',
 	'static/js/pokemon/Player.js',
 	'static/js/battle/Battle.js'
-];
+]);
 
 /**
  * Shared widgets most `static/js/interface/*Interface.js` files reach for through globals,
  * in dependency order. They sit on top of {@link BATTLE_STACK} (they use `Battle` and `Pokemon`),
  * so load them after `createBattleEnv()`. Individual interface files may need more — load,
- * call `getInstance()`, read the `ReferenceError`, add the named file, repeat.
+ * call `getInstance()`, read the `ReferenceError`, add the named file, repeat
+ * (`tests/legacy/js/interface/PokeSearch.test.ts` is the worked example).
+ *
+ * Frozen for the same reason as {@link BATTLE_STACK}.
  */
-export const INTERFACE_STACK = [
+export const INTERFACE_STACK: readonly string[] = Object.freeze([
 	'static/js/interface/ModalWindow.js',
 	'static/js/interface/PokeSearch.js',
 	'static/js/interface/PokeSelect.js',
@@ -738,21 +842,16 @@ export const INTERFACE_STACK = [
 	'static/js/interface/PokeMultiSelect.js',
 	'static/js/interface/SortableTable.js',
 	'static/js/interface/BattleHistogram.js'
-];
+]);
 
 export interface BattleEnvOptions extends GameMasterEnvOptions {
 	/** Also load `static/js/training/TrainingAI.js` (needed for `new Player(i, aiType, battle)`). */
 	trainingAI?: boolean;
-	/**
-	 * Fixed value for `Math.random` inside the context. Battle/ActionLogic use it
-	 * (buff rolls, decision buckets); pin it or your tests are non-deterministic.
-	 * Default `0.5`. Pass `null` to leave `Math.random` alone.
-	 */
-	random?: number | null;
 }
 
 /**
- * An env with the whole battle stack loaded, GameMaster populated and `Math.random` pinned.
+ * An env with the whole battle stack loaded, the synthetic GameMaster populated (pass
+ * `{ real: true }` for the real one) and `Math.random` pinned.
  *
  * ```ts
  * const { env, gm, newBattle } = createBattleEnv();
@@ -765,9 +864,9 @@ export function createBattleEnv(opts: BattleEnvOptions = {}): {
 	gm: any;
 	newBattle: () => any;
 } {
-	const { trainingAI = false, random = 0.5, ...gmOpts } = opts;
+	const { trainingAI = false, ...gmOpts } = opts;
+	// `Math.random` is already pinned by createLegacyEnv (see its `random` option).
 	const { env, gm } = createGameMasterEnv(gmOpts);
-	if (random !== null) env.exec(`Math.random = () => ${random};`);
 	const rest = BATTLE_STACK.filter((f) => f !== 'static/js/GameMaster.js');
 	if (trainingAI) rest.splice(rest.indexOf('static/js/pokemon/Player.js'), 0, 'static/js/training/TrainingAI.js');
 	env.load(...rest);
@@ -786,25 +885,48 @@ export interface FakeTimers {
 	runAll(max?: number): number;
 	/** Number of scheduled, not-yet-run timers. */
 	pending(): number;
-	/** Current fake time in ms. */
+	/** Elapsed fake time in ms, counted from 0 at install. */
 	now(): number;
-	/** Put the real JSDOM timers back. */
+	/** Wall-clock time the context's `Date` reports: `wallClock() === options.now + now()`. */
+	wallClock(): number;
+	/** Put the real JSDOM timers and `Date` back. */
 	restore(): void;
 }
 
+export interface FakeTimerOptions {
+	/**
+	 * Epoch ms the context's `Date` starts at. Default `Date.parse('2025-01-01T00:00:00.000Z')`.
+	 * `new Date()` and `Date.now()` inside the context then track the fake clock, so `tick(1000)`
+	 * moves them forward by exactly a second.
+	 */
+	now?: number | Date;
+}
+
 /**
- * Replace `setTimeout`/`setInterval` inside the legacy context with a controllable clock.
+ * Replace `setTimeout`/`setInterval`/`Date` inside the legacy context with a controllable clock.
  *
  * `vi.useFakeTimers()` patches Node's globals and does NOT reach the JSDOM window the legacy
  * scripts resolve `setTimeout` from, so use this instead for anything running in the context.
+ *
+ * The `Date` replacement matters for `interface/Pokebox.js:29` (`lastDateTime = Date.now()`,
+ * which ends up in a cache-busting query string), `interface/TrainRankingInterface.js:569-570`
+ * (`new Date()` minus 30 days, rendered into the chart's X axis) and
+ * `devtools/RSSFeedInterface.js:27` (`new Date().toUTCString()` written into a feed item).
  */
-export function installFakeTimers(env: LegacyEnv): FakeTimers {
+export function installFakeTimers(env: LegacyEnv, options: FakeTimerOptions = {}): FakeTimers {
 	const ctx = env.ctx;
+	const epoch =
+		options.now === undefined
+			? Date.parse('2025-01-01T00:00:00.000Z')
+			: options.now instanceof Date
+				? options.now.getTime()
+				: Number(options.now);
 	const original = {
 		setTimeout: ctx.setTimeout,
 		clearTimeout: ctx.clearTimeout,
 		setInterval: ctx.setInterval,
-		clearInterval: ctx.clearInterval
+		clearInterval: ctx.clearInterval,
+		Date: ctx.Date
 	};
 	type Timer = { id: number; at: number; fn: any; args: any[]; every: number | null };
 	let clock = 0;
@@ -825,6 +947,20 @@ export function installFakeTimers(env: LegacyEnv): FakeTimers {
 	ctx.setInterval = (fn: any, ms: any, ...args: any[]) => schedule(fn, ms, args, Number(ms) || 1);
 	ctx.clearTimeout = clear;
 	ctx.clearInterval = clear;
+
+	// A Date whose "now" is the fake clock. Everything else (parsing, explicit arguments, the
+	// static helpers, the prototype) is the context's real Date, inherited.
+	const RealDate = original.Date;
+	class FakeDate extends RealDate {
+		constructor(...args: any[]) {
+			if (args.length === 0) super(epoch + clock);
+			else super(...(args as [any]));
+		}
+		static now() {
+			return epoch + clock;
+		}
+	}
+	ctx.Date = FakeDate;
 
 	const runDue = (until: number) => {
 		let ran = 0;
@@ -857,6 +993,7 @@ export function installFakeTimers(env: LegacyEnv): FakeTimers {
 		},
 		pending: () => timers.length,
 		now: () => clock,
+		wallClock: () => epoch + clock,
 		restore() {
 			Object.assign(ctx, original);
 		}

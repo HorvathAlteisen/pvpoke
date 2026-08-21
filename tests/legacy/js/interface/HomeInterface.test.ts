@@ -68,10 +68,8 @@ describe('InterfaceMaster.getInstance', () => {
 		expect(Object.keys(IM)).toEqual(['getInstance']);
 	});
 
-	it('is a lexical binding, not a property of the context global', () => {
-		boot();
-		expect(env.ctx.InterfaceMaster).toBeUndefined();
-	});
+	// (`InterfaceMaster` being a lexical binding rather than a property of the context global is
+	// harness semantics, covered once in harness.test.ts — not re-tested per file.)
 });
 
 describe('initUI', () => {
@@ -105,9 +103,17 @@ describe('initUI', () => {
 		expect(feed.scrollTop).toBe(0);
 	});
 
-	it('does not throw when the home page markup is absent', () => {
+	// Branch: every initUI() selector misses. The constructor still has to complete and wire up
+	// its collaborators, and it must not synthesise the markup it did not find.
+	it('still constructs and wires collaborators when the home page markup is absent', () => {
 		const IM = boot('<div></div>');
-		expect(() => IM.getInstance()).not.toThrow();
+		const i = IM.getInstance();
+
+		expect(i.rss).toBe(rss);
+		expect(i.gm).toBe(gm);
+		expect(env.$('.feed-container').length).toBe(0);
+		expect(env.$('.feed').length).toBe(0);
+		expect(env.document.body.innerHTML).toBe('<div></div>');
 	});
 });
 
