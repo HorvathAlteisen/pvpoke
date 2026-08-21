@@ -478,7 +478,7 @@ class ActionLogic {
 
 				// Skip self defense debuffing moves like Superpower if they aren't lethal
 				// MELMETAL V CRESSELIA IS A NIGHTMARE :D
-				if (hasNonDebuff && poke.speciesName == "Melmetal" && opponent.speciesName == "Cresselia") {
+				if (hasNonDebuff && poke.speciesId == "melmetal" && opponent.speciesId == "cresselia") {
 					if((poke.activeChargedMoves[n].selfDebuffing) && (poke.activeChargedMoves[n].buffs[1] < 1) && (opponent.hp > moveDamage * (1 + 4 / (4 -	poke.activeChargedMoves[n].buffs[0])))){
 						continue;
 					}
