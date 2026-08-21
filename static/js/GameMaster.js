@@ -43,6 +43,8 @@ var GameMaster = (function () {
 
 				console.log("gamemaster loaded");
 
+				object.applyLanguage();
+
 				// Insert cup and format values into cup and format select dropdowns
 				if(typeof updateFormatSelect === "function"){
 					updateFormatSelect(object.data.formats, InterfaceMaster.getInstance());
@@ -103,6 +105,8 @@ var GameMaster = (function () {
 							customData.moves = customData.moves.filter(move => move.moveId != "");
 							object.data.moves = customData.moves
 						}
+
+						object.applyLanguage();
 
 						// Initialize search maps
 						object.createSearchMaps();
@@ -177,11 +181,69 @@ var GameMaster = (function () {
 				id: data.id,
 				title: data.title,
 				dataType: "gamemaster",
-				pokemon: data.pokemon,
+				pokemon: object.toGamemasterEntries(data.pokemon),
 				moves: data.moves
 			}
 
 			window.localStorage.setItem(customData.id, JSON.stringify(customData));
+		}
+
+		// Return the display name of a Pokemon in the current language, or null when the
+		// gamemaster has no translation for it (custom gamemasters, brand new entries).
+		object.getLocalizedSpeciesName = function(speciesId){
+			var names = object.data.pokemonNames;
+
+			if((! names)||(! names[speciesId])||(! names[speciesId][object.getLanguage()])){
+				return null;
+			}
+
+			return names[speciesId][object.getLanguage()];
+		}
+
+		// The language names are displayed in. "en" means the gamemaster's own speciesName.
+		object.getLanguage = function(){
+			if((typeof settings === "undefined")||(! settings.language)){
+				return "en";
+			}
+
+			return settings.language;
+		}
+
+		// Swap every entry's speciesName for its name in the current language. Doing it here,
+		// once, means the rest of the site keeps reading speciesName and gets the translation
+		// for free. The English name stays on the entry as speciesNameEn, for the searches and
+		// the gamemaster exports that need it.
+		object.applyLanguage = function(){
+			for(var i = 0; i < object.data.pokemon.length; i++){
+				var pokemon = object.data.pokemon[i];
+
+				if(! pokemon.speciesNameEn){
+					pokemon.speciesNameEn = pokemon.speciesName;
+				}
+
+				var localizedName = object.getLocalizedSpeciesName(pokemon.speciesId);
+				pokemon.speciesName = localizedName ? localizedName : pokemon.speciesNameEn;
+			}
+		}
+
+		// Pokemon entries as they belong in a gamemaster file: English names, no speciesNameEn.
+		// Anything that saves or prints gamemaster data has to go through this, or it would
+		// write the names of whatever language the site happens to be displayed in.
+		object.toGamemasterEntries = function(pokemon){
+			return pokemon.map(function(entry){
+				var copy = {...entry};
+
+				if(copy.speciesNameEn){
+					copy.speciesName = copy.speciesNameEn;
+					delete copy.speciesNameEn;
+				}
+
+				return copy;
+			});
+		}
+
+		object.exportPokemonJSON = function(){
+			return JSON.stringify(object.toGamemasterEntries(object.data.pokemon));
 		}
 
 		// Create indexed maps for Pokemon and move selection
@@ -196,6 +258,8 @@ var GameMaster = (function () {
 			object.pokeSelectList = object.data.pokemon.map(pokemon => ({
 				speciesId: pokemon.speciesId,
 				speciesName: pokemon.speciesName.toLowerCase(),
+				// Typing the English name finds a Pokemon in every language.
+				speciesNameEn: (pokemon.speciesNameEn || pokemon.speciesName).toLowerCase(),
 				displayName: pokemon.speciesName,
 				dex: pokemon.dex,
 				priority: pokemon.searchPriority || 1,
@@ -382,7 +446,8 @@ var GameMaster = (function () {
 					if(!pokemon.hasTag("mega")){
 						entry = JSON.parse(JSON.stringify(entry)); // Your clones are very impressive, you must be very proud
 						entry.speciesId += "_shadow";
-						entry.speciesName += " (Shadow)";
+						entry.speciesNameEn = (entry.speciesNameEn ? entry.speciesNameEn : entry.speciesName) + " (Shadow)";
+						entry.speciesName = object.getLocalizedSpeciesName(entry.speciesId) || entry.speciesNameEn;
 						entry.tags = entry.tags.filter(t => t != "wildlegendary" && t != "shadoweligible");
 						entry.tags.push("shadow");
 
@@ -447,7 +512,7 @@ var GameMaster = (function () {
 
 			object.data.pokemon.sort((a,b) => (a.dex > b.dex) ? 1 : ((b.dex > a.dex) ? -1 : 0));
 
-			var json = JSON.stringify(object.data.pokemon);
+			var json = object.exportPokemonJSON();
 
 			console.log(json);
 		}
@@ -466,7 +531,7 @@ var GameMaster = (function () {
 
 			object.data.pokemon.sort((a,b) => (a.dex > b.dex) ? 1 : ((b.dex > a.dex) ? -1 : 0));
 
-			var json = JSON.stringify(object.data.pokemon);
+			var json = object.exportPokemonJSON();
 
 			console.log(json);
 		}
@@ -1482,8 +1547,12 @@ var GameMaster = (function () {
 								}
 							}
 						} else{
-							// Name search
+							// Name search, in the display language or in English
 							if(pokemon.speciesName.toLowerCase().startsWith(param)){
+								valid = true;
+							}
+
+							if((pokemon.speciesNameEn)&&(pokemon.speciesNameEn.toLowerCase().startsWith(param))){
 								valid = true;
 							}
 

@@ -36,6 +36,8 @@ function Pokemon(id, i, b, d){
 	this.activeFormId = this.speciesId;
 	this.canonicalId = id.replace("_xs","");
 	this.speciesName = data.speciesName;
+	// The gamemaster's own English name, kept so searches work in any display language.
+	this.speciesNameEn = data.speciesNameEn ? data.speciesNameEn : data.speciesName;
 
 	// Use an alias for duplicate Pokemon entries to redirect to the main Pokemon ID
 	if(data.aliasId){
@@ -2145,8 +2147,8 @@ function Pokemon(id, i, b, d){
 			self.shadowAtkMult = DamageMultiplier.SHADOW_ATK;
 			self.shadowDefMult = DamageMultiplier.SHADOW_DEF;
 
-			if(self.speciesName.indexOf("Shadow") == -1){
-				self.speciesName = self.speciesName + " (Shadow)";
+			if(self.speciesNameEn.indexOf("Shadow") == -1){
+				self.setSpeciesNameForShadowType(true);
 
 				// Add Frustration as a custom move
 				if(! self.knowsMove("FRUSTRATION")){
@@ -2157,13 +2159,29 @@ function Pokemon(id, i, b, d){
 			self.shadowAtkMult = 1;
 			self.shadowDefMult = 1;
 
-			if(self.speciesName.indexOf(" (Shadow)") > -1){
-				self.speciesName = self.speciesName.replace(" (Shadow)","");
+			if(self.speciesNameEn.indexOf(" (Shadow)") > -1){
+				self.setSpeciesNameForShadowType(false);
 
 				// Remove Frustration if added as a Custom Move
 				self.removeMove("FRUSTRATION");
 			}
 		}
+	}
+
+	// Name this Pokemon as its Shadow or non-Shadow self. The gamemaster has an entry for
+	// both, so the display name comes from there; the English name is only assembled by hand
+	// for Pokemon with no Shadow entry of their own (sandbox mode can still shadow those).
+
+	this.setSpeciesNameForShadowType = function(isShadow){
+		var baseId = self.speciesId.replace("_shadow", "");
+		var entryId = isShadow ? baseId + "_shadow" : baseId;
+		var entry = gm.getPokemonById(entryId);
+
+		self.speciesNameEn = isShadow
+			? self.speciesNameEn + " (Shadow)"
+			: self.speciesNameEn.replace(" (Shadow)", "");
+
+		self.speciesName = entry ? entry.speciesName : self.speciesNameEn;
 	}
 
 	// Calculate consistency score based on moveset, used in rankings and the team builder
@@ -2348,6 +2366,7 @@ function Pokemon(id, i, b, d){
 		var form = gm.getPokemonById(formId);
 
 		this.speciesName = form.speciesName;
+		this.speciesNameEn = form.speciesNameEn ? form.speciesNameEn : form.speciesName;
 		this.activeFormId = formId;
 		this.types = [ form.types[0], form.types[1] ];
 		this.typeEffectiveness = getTypeEffectivenessArray(battle);
