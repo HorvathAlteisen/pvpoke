@@ -1059,17 +1059,20 @@ function PokeSelect(element, i){
 		var idToSelect;
 
 		for(var i = 0; i < searchArr.length; i++){
-			var pokeName = searchArr[i].speciesName;
-			var pokeNameEn = searchArr[i].speciesNameEn;
+			var searchNames = searchArr[i].searchNames ? searchArr[i].searchNames : [searchArr[i].speciesName];
 
-			// Name search, in the display language or in English
-			if(pokeName.startsWith(searchStr)){
-				idToSelect = searchArr[i].speciesId;
-				break;
+			// Name search, in any of the languages the Pokemon has a name in
+			var nameMatched = false;
+
+			for(var n = 0; n < searchNames.length; n++){
+				if(searchNames[n].startsWith(searchStr)){
+					idToSelect = searchArr[i].speciesId;
+					nameMatched = true;
+					break;
+				}
 			}
 
-			if((pokeNameEn)&&(pokeNameEn.startsWith(searchStr))){
-				idToSelect = searchArr[i].speciesId;
+			if(nameMatched){
 				break;
 			}
 

@@ -36,8 +36,10 @@ function Pokemon(id, i, b, d){
 	this.activeFormId = this.speciesId;
 	this.canonicalId = id.replace("_xs","");
 	this.speciesName = data.speciesName;
-	// The gamemaster's own English name, kept so searches work in any display language.
+	// The gamemaster's own English name, kept for the things that must not be translated.
 	this.speciesNameEn = data.speciesNameEn ? data.speciesNameEn : data.speciesName;
+	// Every language's name, lowercased, so search works whatever the site is displayed in.
+	this.searchNames = data.searchNames ? data.searchNames : [this.speciesName.toLowerCase()];
 
 	// Use an alias for duplicate Pokemon entries to redirect to the main Pokemon ID
 	if(data.aliasId){

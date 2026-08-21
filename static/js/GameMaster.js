@@ -223,7 +223,28 @@ var GameMaster = (function () {
 
 				var localizedName = object.getLocalizedSpeciesName(pokemon.speciesId);
 				pokemon.speciesName = localizedName ? localizedName : pokemon.speciesNameEn;
+				pokemon.searchNames = object.generateSearchNames(pokemon);
 			}
+		}
+
+		// Every name a Pokemon answers to, lowercased: its English name and its name in each
+		// of the languages the gamemaster has. Searching is not tied to the display language,
+		// so a German name finds a Pokemon on an English site and the other way around.
+		object.generateSearchNames = function(pokemon){
+			var searchNames = [pokemon.speciesNameEn.toLowerCase()];
+			var names = object.data.pokemonNames ? object.data.pokemonNames[pokemon.speciesId] : null;
+
+			if(names){
+				for(var locale in names){
+					var name = names[locale].toLowerCase();
+
+					if(searchNames.indexOf(name) == -1){
+						searchNames.push(name);
+					}
+				}
+			}
+
+			return searchNames;
 		}
 
 		// Pokemon entries as they belong in a gamemaster file: English names, no speciesNameEn.
@@ -237,6 +258,8 @@ var GameMaster = (function () {
 					copy.speciesName = copy.speciesNameEn;
 					delete copy.speciesNameEn;
 				}
+
+				delete copy.searchNames;
 
 				return copy;
 			});
@@ -258,8 +281,8 @@ var GameMaster = (function () {
 			object.pokeSelectList = object.data.pokemon.map(pokemon => ({
 				speciesId: pokemon.speciesId,
 				speciesName: pokemon.speciesName.toLowerCase(),
-				// Typing the English name finds a Pokemon in every language.
-				speciesNameEn: (pokemon.speciesNameEn || pokemon.speciesName).toLowerCase(),
+				// Every language's name, so the picker is searchable in all of them.
+				searchNames: pokemon.searchNames ? pokemon.searchNames : [pokemon.speciesName.toLowerCase()],
 				displayName: pokemon.speciesName,
 				dex: pokemon.dex,
 				priority: pokemon.searchPriority || 1,
@@ -1547,13 +1570,13 @@ var GameMaster = (function () {
 								}
 							}
 						} else{
-							// Name search, in the display language or in English
-							if(pokemon.speciesName.toLowerCase().startsWith(param)){
-								valid = true;
-							}
+							// Name search, in any of the languages the Pokemon has a name in
+							var searchNames = pokemon.searchNames ? pokemon.searchNames : [pokemon.speciesName.toLowerCase()];
 
-							if((pokemon.speciesNameEn)&&(pokemon.speciesNameEn.toLowerCase().startsWith(param))){
-								valid = true;
+							for(var k = 0; k < searchNames.length; k++){
+								if(searchNames[k].startsWith(param)){
+									valid = true;
+								}
 							}
 
 							// Type search
