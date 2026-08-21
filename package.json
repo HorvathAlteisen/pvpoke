@@ -15,7 +15,8 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test": "vitest run",
-		"compile-gamemaster": "tsx scripts/compile-gamemaster.ts"
+		"compile-gamemaster": "tsx scripts/compile-gamemaster.ts",
+		"generate-pokemon-names": "tsx scripts/generate-pokemon-names.ts"
 	},
 	"dependencies": {
 		"mysql2": "^3.14.0"

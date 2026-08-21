@@ -171,7 +171,8 @@ let InterfaceMaster = (function () {
 
 					data.forEach((item, index) => {
 						const pokemon = item.pokemon;
-						const name = pokemon.speciesName.replace("(Shadow)", "");
+						const baseEntry = gm.getPokemonById(pokemon.speciesId.replace("_shadow", ""));
+						const name = baseEntry ? baseEntry.speciesName : pokemon.speciesName;
 						const displayMin = Math.floor(item.minAtk * 10) / 10;
 						const displayMax = Math.floor(item.maxAtk * 10) / 10;
 						const $row = $(".train-table tr.hide").clone().removeClass("hide");

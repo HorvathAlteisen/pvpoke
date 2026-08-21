@@ -1060,9 +1060,15 @@ function PokeSelect(element, i){
 
 		for(var i = 0; i < searchArr.length; i++){
 			var pokeName = searchArr[i].speciesName;
+			var pokeNameEn = searchArr[i].speciesNameEn;
 
-			// Name search
+			// Name search, in the display language or in English
 			if(pokeName.startsWith(searchStr)){
+				idToSelect = searchArr[i].speciesId;
+				break;
+			}
+
+			if((pokeNameEn)&&(pokeNameEn.startsWith(searchStr))){
 				idToSelect = searchArr[i].speciesId;
 				break;
 			}

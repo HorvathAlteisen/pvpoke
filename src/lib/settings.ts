@@ -24,6 +24,8 @@ export interface Settings {
 	hardMovesetLinks: SettingValue;
 	colorblindMode: SettingValue;
 	performanceMode: SettingValue;
+	/** Display language for Pokemon names; "en" is the gamemaster's own names. */
+	language: SettingValue;
 	/** true when the `settings` cookie was present (header.php `isset($_COOKIE['settings'])`). */
 	fromCookie: boolean;
 	/** Any other keys the cookie carried (PHP keeps them on the object). */
@@ -44,6 +46,7 @@ export function defaultSettings(): Settings {
 		hardMovesetLinks: 0,
 		colorblindMode: 0,
 		performanceMode: 0,
+		language: 'en',
 		matrixDirection: undefined,
 		pokeboxLastDateTime: undefined,
 		fromCookie: false
@@ -125,6 +128,11 @@ export function parseSettingsCookie(raw: string | undefined): Settings {
 
 	if (!isset(obj, 'theme')) {
 		obj.theme = 'default';
+	}
+
+	// Not part of the original PHP: Pokemon name language, added with the localized names.
+	if (!isset(obj, 'language')) {
+		obj.language = 'en';
 	}
 
 	// Nested values cannot occur from settingsCookie.php (flat form post); flatten defensively.
