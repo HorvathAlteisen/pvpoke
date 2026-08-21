@@ -9,6 +9,11 @@ const config = {
 	},
 	kit: {
 		adapter: adapter(),
+		alias: {
+			// Legacy-test harness. Declared here (rather than only in vite.config.ts) so that
+			// `svelte-kit sync` also writes the tsconfig path mapping for editors/svelte-check.
+			'@harness': 'tests/legacy/harness.ts'
+		},
 		files: {
 			assets: 'static',
 			hooks: {
