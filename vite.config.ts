@@ -18,6 +18,34 @@ export default defineConfig({
 				: undefined
 	},
 	test: {
-		include: ['src/**/*.test.ts']
+		include: ['src/**/*.test.ts', 'tests/**/*.test.ts'],
+		// NOT 'jsdom'. The legacy tests under tests/legacy build their own JSDOM per file (see
+		// tests/legacy/harness.ts). On the 9p bind mount this repo lives on, `import('jsdom')`
+		// costs ~35s; vitest's jsdom environment pays that per test FILE, the harness pays it
+		// once per worker. Do not "fix" this by switching to environment: 'jsdom'.
+		environment: 'node',
+		// Threads + isolate:false so the one-off jsdom import cost is amortised across every
+		// test file that lands in a worker. Consequence: module scope is SHARED between test
+		// files in a worker, so the harness must keep all mutable state on the env instance.
+		pool: 'threads',
+		isolate: false,
+		poolOptions: {
+			threads: {
+				// minThreads MUST equal maxThreads. With minThreads < maxThreads, tinypool scales
+				// idle workers down mid-run and kills one that is still ~40s into `import('jsdom')`,
+				// which surfaces as `Unhandled Rejection: Error: Terminating worker thread` and a
+				// non-zero exit even though every test passed. Reproducible on this machine.
+				minThreads: 4,
+				maxThreads: 4
+			}
+		},
+		coverage: {
+			provider: 'v8',
+			include: ['static/js/**/*.js', 'static/tera/js/**/*.js', 'scripts/*.js'],
+			exclude: ['static/js/libs/jquery-3.3.1.min.js'],
+			reporter: ['text', 'html', 'json-summary'],
+			reportsDirectory: 'coverage',
+			all: true
+		}
 	}
 });
