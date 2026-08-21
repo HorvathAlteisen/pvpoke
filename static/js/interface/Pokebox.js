@@ -348,7 +348,8 @@ function Pokebox(element, selector, selectMode, b){
 				'theme': settings.theme,
 				'matrixDirection': settings.matrixDirection,
 				'gamemaster': settings.gamemaster,
-				'pokeboxId': pokeboxId
+				'pokeboxId': pokeboxId,
+				'language': settings.language
 			},
 			dataType:'json',
 			success : function(data) {

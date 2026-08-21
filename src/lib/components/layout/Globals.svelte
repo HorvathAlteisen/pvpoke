@@ -4,7 +4,8 @@
 	 * `settings`, `get`). Built as a string and emitted with {@html} because `{}` is not
 	 * interpolated inside a nested <script> in Svelte markup. Formatting follows PHP exactly:
 	 * booleans as true/false where PHP used the ternary, intval() for the numeric fields,
-	 * htmlspecialchars() for the strings, json_encode() for `get`.
+	 * htmlspecialchars() for the strings, json_encode() for `get`. `language` is the one
+	 * addition to the PHP set; js/GameMaster.js reads it to pick the Pokemon names.
 	 */
 	import { page } from '$app/state';
 	import { htmlspecialchars, phpIntval, phpJsonEncode, phpTruthy } from '$lib/php';
@@ -25,6 +26,7 @@
 			hardMovesetLinks: ${phpIntval(settings.hardMovesetLinks)},
 			colorblindMode: ${phpIntval(settings.colorblindMode)},
 			performanceMode: ${phpIntval(settings.performanceMode)},
+			language: "${htmlspecialchars(settings.language)}",
 			theme: "${htmlspecialchars(settings.theme)}"
 		};
 	`
@@ -41,6 +43,7 @@
 			hardMovesetLinks: 0,
 			colorblindMode: 0,
 			performanceMode: 0,
+			language: "en",
 			theme: "default"
 		};
 

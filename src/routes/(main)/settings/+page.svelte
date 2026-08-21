@@ -15,6 +15,19 @@
 	const pokeboxIdSet = $derived(settings.pokeboxId !== undefined && settings.pokeboxId !== null);
 	const on = (v: typeof settings.ads) => (settingIsOne(v) ? 'on' : '');
 	const rankingDetails = $derived(settings.rankingDetails);
+	// Pokemon name language, saved alongside the PHP-era settings.
+	const language = $derived(settings.language !== undefined && settings.language !== null ? settings.language : 'en');
+	const languages: Array<[string, string]> = [
+		['en', 'English'],
+		['de', 'Deutsch'],
+		['es', 'Español'],
+		['fr', 'Français'],
+		['it', 'Italiano'],
+		['ja', '日本語'],
+		['ko', '한국어'],
+		['zh-Hans', '简体中文'],
+		['zh-Hant', '繁體中文']
+	];
 </script>
 
 <h1>Settings</h1>
@@ -28,6 +41,16 @@
 			<select class="input" id="theme-select">
 				<option value="default" selected={theme == 'default'}>Default</option>
 				<option value="night" selected={theme == 'night'}>Night</option>
+			</select>
+		</div>
+
+		<h3>Pokemon Names</h3>
+		<p>Choose the language Pokemon names are displayed in. Searching by the English name keeps working in every language.</p>
+		<div>
+			<select class="input" id="language-select">
+				{#each languages as [code, label] (code)}
+					<option value={code} selected={language == code}>{label}</option>
+				{/each}
 			</select>
 		</div>
 
