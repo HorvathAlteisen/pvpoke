@@ -1,0 +1,1267 @@
+{
+    "10% Forme": {
+        "form": "zygarde-10",
+        "de": "10%-Form",
+        "fr": "Forme 10 %",
+        "es": "Forma 10%",
+        "it": "Forma 10%",
+        "ja": "１０％フォルム",
+        "ko": "10%폼",
+        "zh-Hans": "１０％形态",
+        "zh-Hant": "１０％形態"
+    },
+    "50% Forme": {
+        "form": "zygarde-50",
+        "de": "50%-Form",
+        "fr": "Forme 50 %",
+        "es": "Forma 50%",
+        "it": "Forma 50%",
+        "ja": "５０％フォルム",
+        "ko": "50%폼",
+        "zh-Hans": "５０％形态",
+        "zh-Hant": "５０％形態"
+    },
+    "5th Anniversary": {
+        "form": null
+    },
+    "Alolan": {
+        "form": "raichu-alola",
+        "de": "Alola-Form",
+        "fr": "Forme d’Alola",
+        "es": "Forma de Alola",
+        "it": "Forma di Alola",
+        "ja": "アローラのすがた",
+        "ko": "알로라의 모습",
+        "zh-Hans": "阿罗拉的样子",
+        "zh-Hant": "阿羅拉的樣子"
+    },
+    "Altered": {
+        "form": "giratina-altered",
+        "de": "Wandelform",
+        "fr": "Forme Alternative",
+        "es": "Forma Modificada",
+        "it": "Forma Alterata",
+        "ja": "アナザーフォルム",
+        "ko": "어나더폼",
+        "zh-Hans": "别种形态",
+        "zh-Hant": "別種形態"
+    },
+    "Amped": {
+        "form": "toxtricity-amped",
+        "de": "Hoch-Form",
+        "fr": "Forme Aigüe",
+        "es": "Forma Aguda",
+        "it": "Forma Melodia",
+        "ja": "ハイなすがた",
+        "ko": "하이한 모습",
+        "zh-Hans": "高调的样子",
+        "zh-Hant": "高調的樣子"
+    },
+    "apex": {
+        "form": null
+    },
+    "Aqua": {
+        "form": null
+    },
+    "Aria": {
+        "form": "meloetta-aria",
+        "de": "Gesangsform",
+        "fr": "Forme Chant",
+        "es": "Forma Lírica",
+        "it": "Forma Canto",
+        "ja": "ボイスフォルム",
+        "ko": "보이스폼",
+        "zh-Hans": "歌声形态",
+        "zh-Hant": "歌聲形態"
+    },
+    "Armored": {
+        "form": null,
+        "de": "Rüstung",
+        "fr": "Armuré",
+        "es": "Acorazado",
+        "it": "Corazzato",
+        "ja": "アーマード",
+        "ko": "아머드",
+        "zh-Hans": "盔甲",
+        "zh-Hant": "盔甲"
+    },
+    "Attack": {
+        "form": "deoxys-attack",
+        "de": "Angriffsform",
+        "fr": "Forme Attaque",
+        "es": "Forma Ataque",
+        "it": "Forma Attacco",
+        "ja": "アタックフォルム",
+        "ko": "어택폼",
+        "zh-Hans": "攻击形态",
+        "zh-Hant": "攻擊形態"
+    },
+    "Average": {
+        "form": "pumpkaboo-average",
+        "de": "Größe M",
+        "fr": "Taille Normale",
+        "es": "Tamaño Normal",
+        "it": "Normale",
+        "ja": "ふつうのサイズ",
+        "ko": "보통 사이즈",
+        "zh-Hans": "普通尺寸",
+        "zh-Hant": "普通尺寸"
+    },
+    "Baile": {
+        "form": "oricorio-baile",
+        "de": "Flamenco-Stil",
+        "fr": "Style Flamenco",
+        "es": "Estilo Apasionado",
+        "it": "Stile Flamenco",
+        "ja": "めらめらスタイル",
+        "ko": "이글이글스타일",
+        "zh-Hans": "热辣热辣风格",
+        "zh-Hant": "熱辣熱辣風格"
+    },
+    "Black": {
+        "form": "kyurem-black",
+        "de": "Schwarzes Kyurem",
+        "fr": "Kyurem Noir",
+        "es": "Kyurem Negro",
+        "it": "Kyurem Nero",
+        "ja": "ブラックキュレム",
+        "ko": "블랙큐레무",
+        "zh-Hans": "暗黑酋雷姆",
+        "zh-Hant": "闇黑酋雷姆"
+    },
+    "Blade": {
+        "form": "aegislash-blade",
+        "de": "Klingenform",
+        "fr": "Forme Assaut",
+        "es": "Forma Filo",
+        "it": "Forma Spada",
+        "ja": "ブレードフォルム",
+        "ko": "블레이드폼",
+        "zh-Hans": "刀剑形态",
+        "zh-Hant": "刀劍形態"
+    },
+    "Blaze": {
+        "form": null
+    },
+    "Bug": {
+        "type": "bug",
+        "de": "Käfer",
+        "fr": "Insecte",
+        "es": "Bicho",
+        "it": "Coleottero",
+        "ja": "むし",
+        "ko": "벌레",
+        "zh-Hans": "虫",
+        "zh-Hant": "蟲"
+    },
+    "Burn": {
+        "form": "genesect-burn",
+        "de": "Flammenmodul",
+        "fr": "Module Pyro",
+        "es": "PiroROM",
+        "it": "Piromodulo",
+        "ja": "ブレイズカセット",
+        "ko": "블레이즈카세트",
+        "zh-Hans": null,
+        "zh-Hant": null
+    },
+    "Busted": {
+        "form": "mimikyu-busted",
+        "de": "Entlarvte Form",
+        "fr": "Forme Démasquée",
+        "es": "Forma Descubierta",
+        "it": "Forma Smascherata",
+        "ja": "ばれたすがた",
+        "ko": "들킨 모습",
+        "zh-Hans": "现形的样子",
+        "zh-Hant": "現形的樣子"
+    },
+    "Chill": {
+        "form": "genesect-chill",
+        "de": "Gefriermodul",
+        "fr": "Module Cryo",
+        "es": "CrioROM",
+        "it": "Gelomodulo",
+        "ja": "フリーズカセット",
+        "ko": "프리즈카세트",
+        "zh-Hans": null,
+        "zh-Hant": null
+    },
+    "Combat": {
+        "form": null
+    },
+    "Complete Forme": {
+        "form": "zygarde-complete",
+        "de": "Optimumform",
+        "fr": "Forme Parfaite",
+        "es": "Forma Completa",
+        "it": "Forma Perfetta",
+        "ja": "パーフェクトフォルム",
+        "ko": "퍼펙트폼",
+        "zh-Hans": "完全体形态",
+        "zh-Hant": "完全體形態"
+    },
+    "Confined": {
+        "form": "hoopa",
+        "de": "Gebanntes Hoopa",
+        "fr": "Hoopa Enchaîné",
+        "es": "Hoopa Contenido",
+        "it": "Hoopa Vincolato",
+        "ja": "いましめられしフーパ",
+        "ko": "굴레에 빠진 후파",
+        "zh-Hans": "惩戒胡帕",
+        "zh-Hant": "懲戒胡帕"
+    },
+    "Core": {
+        "form": "minior-red",
+        "de": "Roter Kern",
+        "fr": "Noyau Rouge",
+        "es": "Núcleo Rojo",
+        "it": "Nucleo Rosso",
+        "ja": "あかいろのコア",
+        "ko": "빨간색 코어",
+        "zh-Hans": "红色核心",
+        "zh-Hant": "紅色核心"
+    },
+    "Crowned Shield": {
+        "form": "zamazenta-crowned",
+        "de": "König des Schildes",
+        "fr": "Bouclier Suprême",
+        "es": "Escudo Supremo",
+        "it": "Re degli Scudi",
+        "ja": "たてのおう",
+        "ko": "방패왕",
+        "zh-Hans": "盾之王",
+        "zh-Hant": "盾之王"
+    },
+    "Crowned Sword": {
+        "form": "zacian-crowned",
+        "de": "König des Schwertes",
+        "fr": "Épée Suprême",
+        "es": "Espada Suprema",
+        "it": "Re delle Spade",
+        "ja": "けんのおう",
+        "ko": "검왕",
+        "zh-Hans": "剑之王",
+        "zh-Hant": "劍之王"
+    },
+    "Curly": {
+        "form": "tatsugiri-curly",
+        "de": null,
+        "fr": "Forme Courbée",
+        "es": null,
+        "it": null,
+        "ja": "そったすがた",
+        "ko": null,
+        "zh-Hans": null,
+        "zh-Hant": null
+    },
+    "Dark": {
+        "type": "dark",
+        "de": "Unlicht",
+        "fr": "Ténèbres",
+        "es": "Siniestro",
+        "it": "Buio",
+        "ja": "あく",
+        "ko": "악",
+        "zh-Hans": "恶",
+        "zh-Hant": "惡"
+    },
+    "Dawn Wings": {
+        "form": "necrozma-dawn",
+        "de": "Morgenschwingen",
+        "fr": "Ailes de l’Aurore",
+        "es": "Alas del Alba",
+        "it": "Ali dell’Aurora",
+        "ja": "あかつきのつばさ",
+        "ko": "새벽의 날개",
+        "zh-Hans": "拂晓之翼",
+        "zh-Hant": "拂曉之翼"
+    },
+    "Defense": {
+        "form": "deoxys-defense",
+        "de": "Verteidigungsform",
+        "fr": "Forme Défense",
+        "es": "Forma Defensa",
+        "it": "Forma Difesa",
+        "ja": "ディフェンスフォルム",
+        "ko": "디펜스폼",
+        "zh-Hans": "防御形态",
+        "zh-Hant": "防禦形態"
+    },
+    "Douse": {
+        "form": "genesect-douse",
+        "de": "Aquamodul",
+        "fr": "Module Aqua",
+        "es": "HidroROM",
+        "it": "Idromodulo",
+        "ja": "アクアカセット",
+        "ko": "아쿠아카세트",
+        "zh-Hans": null,
+        "zh-Hant": null
+    },
+    "Dragon": {
+        "type": "dragon",
+        "de": "Drache",
+        "fr": "Dragon",
+        "es": "Dragón",
+        "it": "Drago",
+        "ja": "ドラゴン",
+        "ko": "드래곤",
+        "zh-Hans": "龙",
+        "zh-Hant": "龍"
+    },
+    "Droopy": {
+        "form": "tatsugiri-droopy",
+        "de": null,
+        "fr": "Forme Affalée",
+        "es": null,
+        "it": null,
+        "ja": "たれたすがた",
+        "ko": null,
+        "zh-Hans": null,
+        "zh-Hant": null
+    },
+    "Dusk": {
+        "form": "lycanroc-dusk",
+        "de": "Zwielichtform",
+        "fr": "Forme Crépusculaire",
+        "es": "Forma Crepuscular",
+        "it": "Forma Crepuscolo",
+        "ja": "たそがれのすがた",
+        "ko": "황혼의 모습",
+        "zh-Hans": "黄昏的样子",
+        "zh-Hant": "黃昏的樣子"
+    },
+    "Dusk Mane": {
+        "form": "necrozma-dusk",
+        "de": "Abendmähne",
+        "fr": "Crinière du Couchant",
+        "es": "Melena Crepuscular",
+        "it": "Criniera del Vespro",
+        "ja": "たそがれのたてがみ",
+        "ko": "황혼의 갈기",
+        "zh-Hans": "黄昏之鬃",
+        "zh-Hant": "黃昏之鬃"
+    },
+    "Electric": {
+        "type": "electric",
+        "de": "Elektro",
+        "fr": "Électrik",
+        "es": "Eléctrico",
+        "it": "Elettro",
+        "ja": "でんき",
+        "ko": "전기",
+        "zh-Hans": "电",
+        "zh-Hant": "電"
+    },
+    "Eternamax": {
+        "form": "eternatus-eternamax",
+        "de": "Unendynamax",
+        "fr": "Infinimax",
+        "es": "Dinamax Infinito",
+        "it": "Dynamax Infinito",
+        "ja": "ムゲンダイマックス",
+        "ko": "무한다이맥스",
+        "zh-Hans": "无极巨化",
+        "zh-Hant": "無極巨化"
+    },
+    "Fairy": {
+        "type": "fairy",
+        "de": "Fee",
+        "fr": "Fée",
+        "es": "Hada",
+        "it": "Folletto",
+        "ja": "フェアリー",
+        "ko": "페어리",
+        "zh-Hans": "妖精",
+        "zh-Hant": "妖精"
+    },
+    "family_of_four": {
+        "form": "maushold-family-of-four",
+        "de": null,
+        "fr": "Famille de Quatre",
+        "es": null,
+        "it": null,
+        "ja": "４ひきかぞく",
+        "ko": null,
+        "zh-Hans": null,
+        "zh-Hant": null
+    },
+    "family_of_three": {
+        "form": "maushold-family-of-three",
+        "de": null,
+        "fr": "Famille de Trois",
+        "es": null,
+        "it": null,
+        "ja": "３びきかぞく",
+        "ko": null,
+        "zh-Hans": null,
+        "zh-Hant": null
+    },
+    "Fan": {
+        "form": "rotom-fan",
+        "de": "Wirbel-Rotom",
+        "fr": "Motisma Hélice",
+        "es": "Rotom Ventilador",
+        "it": "Rotom Vortice",
+        "ja": "スピンロトム",
+        "ko": "스핀로토무",
+        "zh-Hans": "旋转洛托姆",
+        "zh-Hant": "旋轉洛托姆"
+    },
+    "Female": {
+        "form": "meowstic-female",
+        "de": "Weiblich",
+        "fr": "Femelle",
+        "es": "Hembra",
+        "it": "Femmina",
+        "ja": "メスのすがた",
+        "ko": "암컷의 모습",
+        "zh-Hans": "雌性的样子",
+        "zh-Hant": "雌性的樣子"
+    },
+    "Fighting": {
+        "type": "fighting",
+        "de": "Kampf",
+        "fr": "Combat",
+        "es": "Lucha",
+        "it": "Lotta",
+        "ja": "かくとう",
+        "ko": "격투",
+        "zh-Hans": "格斗",
+        "zh-Hant": "格鬥"
+    },
+    "Fire": {
+        "type": "fire",
+        "de": "Feuer",
+        "fr": "Feu",
+        "es": "Fuego",
+        "it": "Fuoco",
+        "ja": "ほのお",
+        "ko": "불꽃",
+        "zh-Hans": "火",
+        "zh-Hant": "火"
+    },
+    "Flying": {
+        "type": "flying",
+        "de": "Flug",
+        "fr": "Vol",
+        "es": "Volador",
+        "it": "Volante",
+        "ja": "ひこう",
+        "ko": "비행",
+        "zh-Hans": "飞行",
+        "zh-Hant": "飛行"
+    },
+    "Frost": {
+        "form": "rotom-frost",
+        "de": "Frost-Rotom",
+        "fr": "Motisma Froid",
+        "es": "Rotom Frío",
+        "it": "Rotom Gelo",
+        "ja": "フロストロトム",
+        "ko": "프로스트로토무",
+        "zh-Hans": "结冰洛托姆",
+        "zh-Hant": "結冰洛托姆"
+    },
+    "Full Belly": {
+        "form": "morpeko-full-belly",
+        "de": "Pappsattmuster",
+        "fr": "Mode Rassasié",
+        "es": "Forma Saciada",
+        "it": "Motivo Panciapiena",
+        "ja": "まんぷくもよう",
+        "ko": "배부른 모양",
+        "zh-Hans": "满腹花纹",
+        "zh-Hant": "滿腹花紋"
+    },
+    "Galarian": {
+        "form": "meowth-galar",
+        "de": "Galar-Form",
+        "fr": "Forme de Galar",
+        "es": "Forma de Galar",
+        "it": "Forma di Galar",
+        "ja": "ガラルのすがた",
+        "ko": "가라르의 모습",
+        "zh-Hans": "伽勒尔的样子",
+        "zh-Hant": "伽勒爾的樣子"
+    },
+    "Galarian Zen": {
+        "from": [
+            "Galarian",
+            "Zen"
+        ],
+        "de": "Galar-Form Trance-Modus",
+        "fr": "Forme de Galar Mode Transe",
+        "es": "Forma de Galar Modo Daruma",
+        "it": "Forma di Galar Stato Zen",
+        "ja": "ガラルのすがた ダルマモード",
+        "ko": "가라르의 모습 달마모드",
+        "zh-Hans": "伽勒尔的样子 达摩模式",
+        "zh-Hant": "伽勒爾的樣子 達摩模式"
+    },
+    "Ghost": {
+        "type": "ghost",
+        "de": "Geist",
+        "fr": "Spectre",
+        "es": "Fantasma",
+        "it": "Spettro",
+        "ja": "ゴースト",
+        "ko": "고스트",
+        "zh-Hans": "幽灵",
+        "zh-Hant": "幽靈"
+    },
+    "Grass": {
+        "type": "grass",
+        "de": "Pflanze",
+        "fr": "Plante",
+        "es": "Planta",
+        "it": "Erba",
+        "ja": "くさ",
+        "ko": "풀",
+        "zh-Hans": "草",
+        "zh-Hant": "草"
+    },
+    "Ground": {
+        "type": "ground",
+        "de": "Boden",
+        "fr": "Sol",
+        "es": "Tierra",
+        "it": "Terra",
+        "ja": "じめん",
+        "ko": "땅",
+        "zh-Hans": "地面",
+        "zh-Hant": "地面"
+    },
+    "Hangry": {
+        "form": "morpeko-hangry",
+        "de": "Kohldampfmuster",
+        "fr": "Mode Affamé",
+        "es": "Forma Voraz",
+        "it": "Motivo Panciavuota",
+        "ja": "はらぺこもよう",
+        "ko": "배고픈 모양",
+        "zh-Hans": "空腹花纹",
+        "zh-Hant": "空腹花紋"
+    },
+    "Heat": {
+        "form": "rotom-heat",
+        "de": "Hitze-Rotom",
+        "fr": "Motisma Chaleur",
+        "es": "Rotom Calor",
+        "it": "Rotom Calore",
+        "ja": "ヒートロトム",
+        "ko": "히트로토무",
+        "zh-Hans": "加热洛托姆",
+        "zh-Hant": "加熱洛托姆"
+    },
+    "hero": {
+        "form": "palafin-hero",
+        "de": null,
+        "fr": "Forme Super",
+        "es": null,
+        "it": null,
+        "ja": "マイティフォルム",
+        "ko": null,
+        "zh-Hans": null,
+        "zh-Hant": null
+    },
+    "Hero": {
+        "form": "zacian",
+        "de": "Heldenhafter Krieger",
+        "fr": "Héros Aguerri",
+        "es": "Guerrero Avezado",
+        "it": "Eroe di Mille Lotte",
+        "ja": "れきせんのゆうしゃ",
+        "ko": "역전의 용사",
+        "zh-Hans": "百战勇者",
+        "zh-Hant": "百戰勇者"
+    },
+    "Hisuian": {
+        "form": "growlithe-hisui",
+        "de": "Hisui-Form",
+        "fr": "Forme de Hisui",
+        "es": "Forma de Hisui",
+        "it": "Forma di Hisui",
+        "ja": "ヒスイのすがた",
+        "ko": "히스이의 모습",
+        "zh-Hans": "洗翠的样子",
+        "zh-Hant": "洗翠的樣子",
+        "override": {
+            "es": "Forma de Hisui",
+            "it": "Forma di Hisui",
+            "ko": "히스이의 모습",
+            "zh-Hans": "洗翠的样子",
+            "zh-Hant": "洗翠的樣子"
+        }
+    },
+    "Horizons": {
+        "form": null
+    },
+    "Ice": {
+        "type": "ice",
+        "de": "Eis",
+        "fr": "Glace",
+        "es": "Hielo",
+        "it": "Ghiaccio",
+        "ja": "こおり",
+        "ko": "얼음",
+        "zh-Hans": "冰",
+        "zh-Hant": "冰"
+    },
+    "Ice Rider": {
+        "form": "calyrex-ice",
+        "de": "Schimmelreiter",
+        "fr": "Cavalier du Froid",
+        "es": "Jinete Glacial",
+        "it": "Cavaliere Glaciale",
+        "ja": "はくばじょうのすがた",
+        "ko": "백마 탄 모습",
+        "zh-Hans": "骑白马的样子",
+        "zh-Hant": "騎白馬的樣子"
+    },
+    "Incarnate": {
+        "form": "tornadus-incarnate",
+        "de": "Inkarnationsform",
+        "fr": "Forme Avatar",
+        "es": "Forma Avatar",
+        "it": "Forma Incarnazione",
+        "ja": "けしんフォルム",
+        "ko": "화신폼",
+        "zh-Hans": "化身形态",
+        "zh-Hant": "化身形態"
+    },
+    "Jr": {
+        "form": null
+    },
+    "Kariyushi": {
+        "form": null
+    },
+    "Land": {
+        "form": "shaymin-land",
+        "de": "Landform",
+        "fr": "Forme Terrestre",
+        "es": "Forma Tierra",
+        "it": "Forma Terra",
+        "ja": "ランドフォルム",
+        "ko": "랜드폼",
+        "zh-Hans": "陆上形态",
+        "zh-Hant": "陸上形態"
+    },
+    "Large": {
+        "form": "pumpkaboo-large",
+        "de": "Größe L",
+        "fr": "Taille Maxi",
+        "es": "Tamaño Grande",
+        "it": "Grande",
+        "ja": "おおきいサイズ",
+        "ko": "큰 사이즈",
+        "zh-Hans": "大尺寸",
+        "zh-Hant": "大尺寸"
+    },
+    "Libre": {
+        "form": null
+    },
+    "Low Key": {
+        "form": "toxtricity-low-key",
+        "de": "Tief-Form",
+        "fr": "Forme Grave",
+        "es": "Forma Grave",
+        "it": "Forma Basso",
+        "ja": "ローなすがた",
+        "ko": "로우한 모습",
+        "zh-Hans": "低调的样子",
+        "zh-Hant": "低調的樣子"
+    },
+    "Male": {
+        "form": "meowstic-male",
+        "de": "Männlich",
+        "fr": "Mâle",
+        "es": "Macho",
+        "it": "Maschio",
+        "ja": "オスのすがた",
+        "ko": "수컷의 모습",
+        "zh-Hans": "雄性的样子",
+        "zh-Hant": "雄性的樣子"
+    },
+    "Mega": {
+        "form": null,
+        "de": "Mega",
+        "fr": "Méga",
+        "es": "Mega",
+        "it": "Mega",
+        "ja": "メガ",
+        "ko": "메가",
+        "zh-Hans": "超级",
+        "zh-Hant": "超級"
+    },
+    "Mega X": {
+        "from": [
+            "Mega"
+        ],
+        "suffix": " X",
+        "de": "Mega X",
+        "fr": "Méga X",
+        "es": "Mega X",
+        "it": "Mega X",
+        "ja": "メガ X",
+        "ko": "메가 X",
+        "zh-Hans": "超级 X",
+        "zh-Hant": "超級 X"
+    },
+    "Mega Y": {
+        "from": [
+            "Mega"
+        ],
+        "suffix": " Y",
+        "de": "Mega Y",
+        "fr": "Méga Y",
+        "es": "Mega Y",
+        "it": "Mega Y",
+        "ja": "メガ Y",
+        "ko": "메가 Y",
+        "zh-Hans": "超级 Y",
+        "zh-Hant": "超級 Y"
+    },
+    "Meteor": {
+        "form": "minior-red-meteor",
+        "de": "Meteorform",
+        "fr": "Forme Météore",
+        "es": "Forma Meteorito",
+        "it": "Forma Meteora",
+        "ja": "りゅうせいのすがた",
+        "ko": "유성의 모습",
+        "zh-Hans": "流星的样子",
+        "zh-Hant": "流星的樣子"
+    },
+    "Midday": {
+        "form": "lycanroc-midday",
+        "de": "Tagform",
+        "fr": "Forme Diurne",
+        "es": "Forma Diurna",
+        "it": "Forma Giorno",
+        "ja": "まひるのすがた",
+        "ko": "한낮의 모습",
+        "zh-Hans": "白昼的样子",
+        "zh-Hant": "白晝的樣子"
+    },
+    "Midnight": {
+        "form": "lycanroc-midnight",
+        "de": "Nachtform",
+        "fr": "Forme Nocturne",
+        "es": "Forma Nocturna",
+        "it": "Forma Notte",
+        "ja": "まよなかのすがた",
+        "ko": "한밤중의 모습",
+        "zh-Hans": "黑夜的样子",
+        "zh-Hant": "黑夜的樣子"
+    },
+    "Mow": {
+        "form": "rotom-mow",
+        "de": "Schneid-Rotom",
+        "fr": "Motisma Tonte",
+        "es": "Rotom Corte",
+        "it": "Rotom Taglio",
+        "ja": "カットロトム",
+        "ko": "커트로토무",
+        "zh-Hans": "切割洛托姆",
+        "zh-Hant": "切割洛托姆"
+    },
+    "Noice": {
+        "form": "eiscue-noice",
+        "de": "Wohlfühlkopf",
+        "fr": "Tête Dégel",
+        "es": "Cara Deshielo",
+        "it": "Liquefaccia",
+        "ja": "ナイスフェイス",
+        "ko": "나이스페이스",
+        "zh-Hans": "解冻头",
+        "zh-Hant": "解凍頭"
+    },
+    "Null": {
+        "form": null
+    },
+    "Ordinary": {
+        "form": "keldeo-ordinary",
+        "de": "Standardform",
+        "fr": "Aspect Normal",
+        "es": "Forma Habitual",
+        "it": "Forma Normale",
+        "ja": "いつものすがた",
+        "ko": "평상시 모습",
+        "zh-Hans": "平常的样子",
+        "zh-Hant": "平常的樣子"
+    },
+    "Origin": {
+        "form": "giratina-origin",
+        "de": "Urform",
+        "fr": "Forme Originelle",
+        "es": "Forma Origen",
+        "it": "Forma Originale",
+        "ja": "オリジンフォルム",
+        "ko": "오리진폼",
+        "zh-Hans": "起源形态",
+        "zh-Hant": "起源形態"
+    },
+    "Overcast": {
+        "form": "cherrim-overcast",
+        "de": "Wolkenform",
+        "fr": "Temps Couvert",
+        "es": "Forma Encapotado",
+        "it": "Forma Nuvola",
+        "ja": "ネガフォルム",
+        "ko": "네거폼",
+        "zh-Hans": "阴天形态",
+        "zh-Hant": "陰天形態"
+    },
+    "Pa'u": {
+        "form": "oricorio-pau",
+        "de": "Hula-Stil",
+        "fr": "Style Hula",
+        "es": "Estilo Plácido",
+        "it": "Stile Hula",
+        "ja": "ふらふらスタイル",
+        "ko": "훌라훌라스타일",
+        "zh-Hans": "呼拉呼拉风格",
+        "zh-Hant": "呼拉呼拉風格"
+    },
+    "Paldean": {
+        "form": "wooper-paldea",
+        "override": {
+            "de": "Paldea-Form",
+            "es": "Forma de Paldea",
+            "it": "Forma di Paldea",
+            "ko": "팔데아의 모습",
+            "zh-Hans": "帕底亚的样子",
+            "zh-Hant": "帕底亞的樣子"
+        },
+        "de": "Paldea-Form",
+        "fr": "Forme de Paldéa",
+        "es": "Forma de Paldea",
+        "it": "Forma di Paldea",
+        "ja": "パルデアのすがた",
+        "ko": "팔데아의 모습",
+        "zh-Hans": "帕底亚的样子",
+        "zh-Hant": "帕底亞的樣子"
+    },
+    "Pirouette": {
+        "form": "meloetta-pirouette",
+        "de": "Tanzform",
+        "fr": "Forme Danse",
+        "es": "Forma Danza",
+        "it": "Forma Danza",
+        "ja": "ステップフォルム",
+        "ko": "스텝폼",
+        "zh-Hans": "舞步形态",
+        "zh-Hant": "舞步形態"
+    },
+    "Plant": {
+        "form": "wormadam-plant",
+        "de": "Pflanzenumhang",
+        "fr": "Cape Plante",
+        "es": "Tronco Planta",
+        "it": "Manto Pianta",
+        "ja": "くさきのミノ",
+        "ko": "초목도롱",
+        "zh-Hans": "草木蓑衣",
+        "zh-Hant": "草木蓑衣"
+    },
+    "Poison": {
+        "type": "poison",
+        "de": "Gift",
+        "fr": "Poison",
+        "es": "Veneno",
+        "it": "Veleno",
+        "ja": "どく",
+        "ko": "독",
+        "zh-Hans": "毒",
+        "zh-Hant": "毒"
+    },
+    "Pom-Pom": {
+        "form": "oricorio-pom-pom",
+        "de": "Cheerleading-Stil",
+        "fr": "Style Pom-Pom",
+        "es": "Estilo Animado",
+        "it": "Stile Cheerdance",
+        "ja": "ぱちぱちスタイル",
+        "ko": "파칙파칙스타일",
+        "zh-Hans": "啪滋啪滋风格",
+        "zh-Hant": "啪滋啪滋風格"
+    },
+    "Pop Star": {
+        "form": null
+    },
+    "Primal": {
+        "form": null,
+        "de": "Proto",
+        "fr": "Primo",
+        "es": "Primigenio",
+        "it": "Primevo",
+        "ja": "ゲンシ",
+        "ko": "원시",
+        "zh-Hans": "原始",
+        "zh-Hant": "原始"
+    },
+    "Psychic": {
+        "type": "psychic",
+        "de": "Psycho",
+        "fr": "Psy",
+        "es": "Psíquico",
+        "it": "Psico",
+        "ja": "エスパー",
+        "ko": "에스퍼",
+        "zh-Hans": "超能力",
+        "zh-Hant": "超能力"
+    },
+    "Rainy": {
+        "form": "castform-rainy",
+        "de": "Regenform",
+        "fr": "Forme Eau de Pluie",
+        "es": "Forma Lluvia",
+        "it": "Forma Pioggia",
+        "ja": "あまみずのすがた",
+        "ko": "빗방울의 모습",
+        "zh-Hans": "雨水的样子",
+        "zh-Hant": "雨水的樣子"
+    },
+    "Rapid Strike": {
+        "form": "urshifu-rapid-strike",
+        "de": "Fließender Stil",
+        "fr": "Style Mille Poings",
+        "es": "Estilo Fluido",
+        "it": "Stile Pluricolpo",
+        "ja": "れんげきのかた",
+        "ko": "연격의 태세",
+        "zh-Hans": "连击流",
+        "zh-Hant": "連擊流"
+    },
+    "Resolute": {
+        "form": "keldeo-resolute",
+        "de": "Resolutform",
+        "fr": "Aspect Décidé",
+        "es": "Forma Brío",
+        "it": "Forma Risoluta",
+        "ja": "かくごのすがた",
+        "ko": "각오의 모습",
+        "zh-Hans": "觉悟的样子",
+        "zh-Hant": "覺悟的樣子"
+    },
+    "Rock": {
+        "type": "rock",
+        "de": "Gestein",
+        "fr": "Roche",
+        "es": "Roca",
+        "it": "Roccia",
+        "ja": "いわ",
+        "ko": "바위",
+        "zh-Hans": "岩石",
+        "zh-Hant": "岩石"
+    },
+    "Rock Star": {
+        "form": null
+    },
+    "Sandy": {
+        "form": "wormadam-sandy",
+        "de": "Sandumhang",
+        "fr": "Cape Sable",
+        "es": "Tronco Arena",
+        "it": "Manto Sabbia",
+        "ja": "すなちのミノ",
+        "ko": "모래땅도롱",
+        "zh-Hans": "砂土蓑衣",
+        "zh-Hant": "砂土蓑衣"
+    },
+    "School": {
+        "form": "wishiwashi-school",
+        "de": "Schwarmform",
+        "fr": "Forme Banc",
+        "es": "Forma Banco",
+        "it": "Forma Banco",
+        "ja": "むれたすがた",
+        "ko": "군집의 모습",
+        "zh-Hans": "鱼群的样子",
+        "zh-Hant": "魚群的樣子"
+    },
+    "Sensu": {
+        "form": "oricorio-sensu",
+        "de": "Buyo-Stil",
+        "fr": "Style Buyō",
+        "es": "Estilo Refinado",
+        "it": "Stile Buyō",
+        "ja": "まいまいスタイル",
+        "ko": "하늘하늘스타일",
+        "zh-Hans": "轻盈轻盈风格",
+        "zh-Hant": "輕盈輕盈風格"
+    },
+    "Shadow": {
+        "form": null,
+        "de": "Crypto",
+        "fr": "Obscur",
+        "es": "Oscuro",
+        "it": "Ombra",
+        "ja": "シャドウ",
+        "ko": "섀도우",
+        "zh-Hans": "暗影",
+        "zh-Hant": "暗影"
+    },
+    "Shaymin Scarf": {
+        "form": null
+    },
+    "Shield": {
+        "form": "aegislash-shield",
+        "de": "Schildform",
+        "fr": "Forme Parade",
+        "es": "Forma Escudo",
+        "it": "Forma Scudo",
+        "ja": "シールドフォルム",
+        "ko": "실드폼",
+        "zh-Hans": "盾牌形态",
+        "zh-Hant": "盾牌形態"
+    },
+    "Shock": {
+        "form": "genesect-shock",
+        "de": "Blitzmodul",
+        "fr": "Module Choc",
+        "es": "FulgoROM",
+        "it": "Voltmodulo",
+        "ja": "イナズマカセット",
+        "ko": "번개카세트",
+        "zh-Hans": null,
+        "zh-Hant": null
+    },
+    "Single Strike": {
+        "form": "urshifu-single-strike",
+        "de": "Fokussierter Stil",
+        "fr": "Style Poing Final",
+        "es": "Estilo Brusco",
+        "it": "Stile Singolcolpo",
+        "ja": "いちげきのかた",
+        "ko": "일격의 태세",
+        "zh-Hans": "一击流",
+        "zh-Hant": "一擊流"
+    },
+    "Sky": {
+        "form": "shaymin-sky",
+        "de": "Zenitform",
+        "fr": "Forme Céleste",
+        "es": "Forma Cielo",
+        "it": "Forma Cielo",
+        "ja": "スカイフォルム",
+        "ko": "스카이폼",
+        "zh-Hans": "天空形态",
+        "zh-Hant": "天空形態"
+    },
+    "Small": {
+        "form": "pumpkaboo-small",
+        "de": "Größe S",
+        "fr": "Taille Mini",
+        "es": "Tamaño Pequeño",
+        "it": "Mini",
+        "ja": "ちいさいサイズ",
+        "ko": "작은 사이즈",
+        "zh-Hans": "小尺寸",
+        "zh-Hant": "小尺寸"
+    },
+    "Snowy": {
+        "form": "castform-snowy",
+        "de": "Schneeform",
+        "fr": "Forme Blizzard",
+        "es": "Forma Nieve",
+        "it": "Forma Nuvola di Neve",
+        "ja": "ゆきぐものすがた",
+        "ko": "설운의 모습",
+        "zh-Hans": "雪云的样子",
+        "zh-Hant": "雪雲的樣子"
+    },
+    "Solo": {
+        "form": "wishiwashi-solo",
+        "de": "Einzelform",
+        "fr": "Forme Solitaire",
+        "es": "Forma Individual",
+        "it": "Forma Individuale",
+        "ja": "たんどくのすがた",
+        "ko": "단독의 모습",
+        "zh-Hans": "单独的样子",
+        "zh-Hant": "單獨的樣子"
+    },
+    "Speed": {
+        "form": "deoxys-speed",
+        "de": "Initiativeform",
+        "fr": "Forme Vitesse",
+        "es": "Forma Velocidad",
+        "it": "Forma Velocità",
+        "ja": "スピードフォルム",
+        "ko": "스피드폼",
+        "zh-Hans": "速度形态",
+        "zh-Hant": "速度形態"
+    },
+    "Standard": {
+        "form": "darmanitan-standard",
+        "de": "Normalmodus",
+        "fr": "Mode Normal",
+        "es": "Modo Normal",
+        "it": "Stato Normale",
+        "ja": "ノーマルモード",
+        "ko": "노말모드",
+        "zh-Hans": "普通模式",
+        "zh-Hant": "普通模式"
+    },
+    "Steel": {
+        "type": "steel",
+        "de": "Stahl",
+        "fr": "Acier",
+        "es": "Acero",
+        "it": "Acciaio",
+        "ja": "はがね",
+        "ko": "강철",
+        "zh-Hans": "钢",
+        "zh-Hant": "鋼"
+    },
+    "Stretchy": {
+        "form": "tatsugiri-stretchy",
+        "de": null,
+        "fr": "Forme Raide",
+        "es": null,
+        "it": null,
+        "ja": "のびたすがた",
+        "ko": null,
+        "zh-Hans": null,
+        "zh-Hant": null
+    },
+    "Sunny": {
+        "form": "castform-sunny",
+        "de": "Sonnenform",
+        "fr": "Forme Solaire",
+        "es": "Forma Sol",
+        "it": "Forma Sole",
+        "ja": "たいようのすがた",
+        "ko": "태양의 모습",
+        "zh-Hans": "太阳的样子",
+        "zh-Hant": "太陽的樣子"
+    },
+    "Sunshine": {
+        "form": "cherrim-sunshine",
+        "de": "Sonnenform",
+        "fr": "Temps Ensoleillé",
+        "es": "Forma Soleado",
+        "it": "Forma Splendore",
+        "ja": "ポジフォルム",
+        "ko": "포지폼",
+        "zh-Hans": "晴天形态",
+        "zh-Hant": "晴天形態"
+    },
+    "Super": {
+        "form": "pumpkaboo-super",
+        "de": "Größe XL",
+        "fr": "Taille Ultra",
+        "es": "Tamaño Extragrande",
+        "it": "Maxi",
+        "ja": "とくだいサイズ",
+        "ko": "특대 사이즈",
+        "zh-Hans": "特大尺寸",
+        "zh-Hant": "特大尺寸"
+    },
+    "Therian": {
+        "form": "tornadus-therian",
+        "de": "Tiergeistform",
+        "fr": "Forme Totémique",
+        "es": "Forma Tótem",
+        "it": "Forma Totem",
+        "ja": "れいじゅうフォルム",
+        "ko": "영물폼",
+        "zh-Hans": "灵兽形态",
+        "zh-Hant": "靈獸形態"
+    },
+    "Trash": {
+        "form": "wormadam-trash",
+        "de": "Lumpenumhang",
+        "fr": "Cape Déchet",
+        "es": "Tronco Basura",
+        "it": "Manto Scarti",
+        "ja": "ゴミのミノ",
+        "ko": "슈레도롱",
+        "zh-Hans": "垃圾蓑衣",
+        "zh-Hant": "垃圾蓑衣"
+    },
+    "ultimate": {
+        "form": null
+    },
+    "Ultra": {
+        "form": "necrozma-ultra",
+        "de": "Ultra",
+        "fr": "Ultra-Necrozma",
+        "es": "Ultra-Necrozma",
+        "it": "UltraNecrozma",
+        "ja": "ウルトラネクロズマ",
+        "ko": "울트라네크로즈마",
+        "zh-Hans": "究极奈克洛兹玛",
+        "zh-Hant": "究極奈克洛茲瑪"
+    },
+    "Unbound": {
+        "form": "hoopa-unbound",
+        "de": "Entfesseltes Hoopa",
+        "fr": "Hoopa Déchaîné",
+        "es": "Hoopa Desatado",
+        "it": "Hoopa Libero",
+        "ja": "ときはなたれしフーパ",
+        "ko": "굴레를 벗어난 후파",
+        "zh-Hans": "解放胡帕",
+        "zh-Hant": "解放胡帕"
+    },
+    "Wash": {
+        "form": "rotom-wash",
+        "de": "Wasch-Rotom",
+        "fr": "Motisma Lavage",
+        "es": "Rotom Lavado",
+        "it": "Rotom Lavaggio",
+        "ja": "ウォッシュロトム",
+        "ko": "워시로토무",
+        "zh-Hans": "清洗洛托姆",
+        "zh-Hant": "清洗洛托姆"
+    },
+    "Water": {
+        "type": "water",
+        "de": "Wasser",
+        "fr": "Eau",
+        "es": "Agua",
+        "it": "Acqua",
+        "ja": "みず",
+        "ko": "물",
+        "zh-Hans": "水",
+        "zh-Hant": "水"
+    },
+    "White": {
+        "form": "kyurem-white",
+        "de": "Weißes Kyurem",
+        "fr": "Kyurem Blanc",
+        "es": "Kyurem Blanco",
+        "it": "Kyurem Bianco",
+        "ja": "ホワイトキュレム",
+        "ko": "화이트큐레무",
+        "zh-Hans": "焰白酋雷姆",
+        "zh-Hant": "焰白酋雷姆"
+    },
+    "Zen": {
+        "form": "darmanitan-zen",
+        "de": "Trance-Modus",
+        "fr": "Mode Transe",
+        "es": "Modo Daruma",
+        "it": "Stato Zen",
+        "ja": "ダルマモード",
+        "ko": "달마모드",
+        "zh-Hans": "达摩模式",
+        "zh-Hant": "達摩模式"
+    },
+    "zero": {
+        "form": "palafin-zero",
+        "de": null,
+        "fr": "Forme Ordinaire",
+        "es": null,
+        "it": null,
+        "ja": "ナイーブフォルム",
+        "ko": null,
+        "zh-Hans": null,
+        "zh-Hant": null
+    }
+}
